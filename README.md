@@ -16,7 +16,7 @@ Task:
 1. Create a one-dimensional array m of type int. Fill it with odd numbers from 7 to 19 inclusive in ascending order.
 2. Create a one-dimensional float array x. Fill it with 19 random numbers ranging from -11.0 to 12.0.
 3. Create a 7x19 2D array u. Calculate its elements using the following formula (where x = x [j]):
-  - if m[i] = 13, then u[i][j]=tan(ln(cos^2(x)));
-  - if m[i] ∈ {7, 9, 11}, then u[i][j]=(((1/2⋅(1−x))^x−12)/0.25)^3;
-  - for other values m[i]: u[i][j]=arcsin(sin(ln(4⋅|x|/5))).
+    - if m[i] = 13, then u[i][j]=tan(ln(cos^2(x)));
+    - if m[i] ∈ {7, 9, 11}, then u[i][j]=(((1/2⋅(1−x))^x−12)/0.25)^3;
+    - for other values m[i]: u[i][j]=arcsin(sin(ln(4⋅|x|/5))).
 4. Print the resulting array in the format with two decimal places.
