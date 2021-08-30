@@ -41,3 +41,17 @@ The base classes and the battle simulator are in the jar-archive (Pokemon.jar). 
 
 Pokémon:
 ![image](https://user-images.githubusercontent.com/75897943/131360592-519851b7-3400-4ada-8fec-157168f557f4.png)
+
+## Laboratory work #3
+
+Write a program that implements the object model according to the following description of the domain.
+
+Despription of the subject area:
+
+The faint strokes of the oars were heard closer and closer. A small bell rang. Moomin-mom rushed to the ramp. She saw how the Moomin-troll dropped the oar into the water, turning the boat around. In confusion, he tried to row the second oar, but the boat circled in one place. In the stern sat a small, thin Hemuliha with a kind face and shouting something, but what exactly - no one could understand.
+
+The program must meet the following requirements:
+1. The modified model must comply with the SOLID principles.
+2. The program must contain at least two interfaces and one abstract class.
+3. The developed classes must override the equals (), toString () and hashCode () methods.
+4. The program must contain at least one enumerated type (enum).
