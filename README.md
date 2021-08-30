@@ -37,6 +37,7 @@ The attack must be of standard type, power and accuracy. Standard attack effects
 
 Using the Battle simulation class, create 2 Pokémon teams (each Pokémon must have a name) and start the battle.
 
-Pokémon:
+The base classes and the battle simulator are in the jar-archive (Pokemon.jar). Documentation in javadoc format is here (https://se.ifmo.ru/~tony/doc/).
 
-![image](https://user-images.githubusercontent.com/75897943/131359977-e43047dd-f3c8-4aae-9f29-0b0b864f7c6d.png)
+Pokémon:
+![image](https://user-images.githubusercontent.com/75897943/131360592-519851b7-3400-4ada-8fec-157168f557f4.png)
