@@ -38,4 +38,5 @@ The attack must be of standard type, power and accuracy. Standard attack effects
 Using the Battle simulation class, create 2 Pokémon teams (each Pokémon must have a name) and start the battle.
 
 Pokémon:
+
 ![image](https://user-images.githubusercontent.com/75897943/131359977-e43047dd-f3c8-4aae-9f29-0b0b864f7c6d.png)
