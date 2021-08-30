@@ -34,4 +34,8 @@ Based on the base Pokemon class, write your own classes for the specified types 
 
 Pokémon classes must be inherited according to the Pokémon evolutionary chain. Based on the base classes PhysicalMove, SpecialMove and StatusMove, implement their own classes for the specified types of attacks. 
 The attack must be of standard type, power and accuracy. Standard attack effects must be implemented. Assign attacks to each type of Pokémon in accordance with the option. The Pokémon level is chosen as the minimum required for all implemented attacks.
+
 Using the Battle simulation class, create 2 Pokémon teams (each Pokémon must have a name) and start the battle.
+
+Pokémon:
+![image](https://user-images.githubusercontent.com/75897943/131359977-e43047dd-f3c8-4aae-9f29-0b0b864f7c6d.png)
