@@ -20,3 +20,18 @@ Task:
     - if m[i] ∈ {7, 9, 11}, then u[i][j]=(((1/2⋅(1−x))^x−12)/0.25)^3;
     - for other values m[i]: u[i][j]=arcsin(sin(ln(4⋅|x|/5))).
 4. Print the resulting array in the format with two decimal places.
+
+## Laboratory work #2
+
+Based on the base Pokemon class, write your own classes for the specified types of Pokemon. Each type of Pokémon must have one or two types and standard basic characteristics:
+
+1. health points (HP)
+2. attack
+3. defence
+4. special attack
+5. special defence
+6. speed
+
+Pokémon classes must be inherited according to the Pokémon evolutionary chain. Based on the base classes PhysicalMove, SpecialMove and StatusMove, implement their own classes for the specified types of attacks. 
+The attack must be of standard type, power and accuracy. Standard attack effects must be implemented. Assign attacks to each type of Pokémon in accordance with the option. The Pokémon level is chosen as the minimum required for all implemented attacks.
+Using the Battle simulation class, create 2 Pokémon teams (each Pokémon must have a name) and start the battle.
