@@ -4,6 +4,7 @@ public class lab1
     {
         int i;
         int j = 0;
+
         /* The required number of elements in the interval [a; b] = b - a + 1. Since we only need odd, then before
          * adding one, you need to divide (b - a) by 2. */
         int[] m = new int[(19 - 7) / 2 + 1];
