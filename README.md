@@ -46,7 +46,7 @@ Pokémon:
 
 Write a program that implements the object model according to the following description of the domain.
 
-Despription of the subject area:
+Description of the subject area:
 
 The faint strokes of the oars were heard closer and closer. A small bell rang. Moomin-mom rushed to the ramp. She saw how the Moomin-troll dropped the oar into the water, turning the boat around. In confusion, he tried to row the second oar, but the boat circled in one place. In the stern sat a small, thin Hemuliha with a kind face and shouting something, but what exactly - no one could understand.
 
@@ -55,3 +55,26 @@ The program must meet the following requirements:
 2. The program must contain at least two interfaces and one abstract class.
 3. The developed classes must override the equals (), toString () and hashCode () methods.
 4. The program must contain at least one enumerated type (enum).
+
+## Laboratory work #4
+
+Refine the program from lab # 3 by updating the object model implementation in accordance with the new version of the domain description.
+
+Description of the subject area:
+
+The performance became more and more fun. Little by little, the entire audience moved onto the stage and took over the plot in the play, eating their own admission, which was placed on the dining room table in the living room.
+Moomin-mom, freed from the skirts that burdened her, ran back and forth, delivering cups of coffee.
+The orchestra began to play the Hemul march.
+Moomin-dad was beaming, rejoicing at the great success, and Misa was as happy as at the dress rehearsal.
+Suddenly Moomin-mom froze in the middle of the stage and dropped a cup of coffee on the floor.
+And everything was silent around.
+The faint strokes of the oars were heard closer and closer. A small bell rang. Moomin-mom rushed to the ramp. She saw how the Moomin-troll dropped the oar into the water, turning the boat around. In confusion, he tried to row the second oar, but the boat circled in one place. In the stern sat a small, thin Hemuliha with a kind face and shouting something, but what exactly - no one could understand.
+Moomin-mom did not know what her son had done, but she had no doubt that she would approve of his act.
+The audience was a little surprised at first, but then they realized that the play was going on. Leaving the coffee cups, they sat down on the ramp to watch the play continue.
+The audience applauded.
+Hemul turned around and glared at Snusmumrik.
+Hemul did not say a word. He slowly approached, spreading his huge paws wide to grab Snusmumrik by the hair. Here he is getting closer and closer, here he rushes forward, and then ...
+
+The program must meet the following requirements:
+1. The program must implement 2 of its own exception classes (checked and unchecked), as well as the exception handling of these classes.
+2. The use of local, anonymous and nested classes (static and non-static) must be added to the program.
