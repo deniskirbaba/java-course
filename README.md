@@ -44,6 +44,7 @@ Pokémon:
 Write a program that implements the object model according to the following description of the domain.
 
 Description of the subject area:
+
 The faint strokes of the oars were heard closer and closer. A small bell rang. Moomin-mom rushed to the ramp. She saw how the Moomin-troll dropped the oar into the water, turning the boat around. In confusion, he tried to row the second oar, but the boat circled in one place. In the stern sat a small, thin Hemuliha with a kind face and shouting something, but what exactly - no one could understand.
 
 The program must meet the following requirements:
@@ -57,6 +58,7 @@ The program must meet the following requirements:
 Refine the program from lab # 3 by updating the object model implementation in accordance with the new version of the domain description.
 
 Description of the subject area:
+
 The performance became more and more fun. Little by little, the entire audience moved onto the stage and took over the plot in the play, eating their own admission, which was placed on the dining room table in the living room.
 Moomin-mom, freed from the skirts that burdened her, ran back and forth, delivering cups of coffee.
 The orchestra began to play the Hemul march.
@@ -91,6 +93,70 @@ The developed program must meet the following requirements:
 * The program must work correctly with incorrect data (user input errors, lack of access rights to the file, etc.).
 
 In interactive mode, the program must support the execution of the following commands:
-
 * *help*: display help for available commands
-* *
+* *info*: print information about the collection (type, date of initialization, number of elements, etc.) to the standard output stream
+* *show*: print to standard output all elements of the collection in string representation
+* *add {element}*: add new item to collection
+* *update id {element}*: update the value of the collection element whose id is equal to the given
+* *remove_by_id id*: remove an item from the collection by its id
+* *clear*: clear collection
+* *save*: save collection to file
+* *execute_script file_name*: read and execute the script from the specified file. The script contains commands in the same form in which the user enters them interactively.
+* *exit*: end the program (without saving to file)
+* *remove_at index*: remove the element at the given position of the collection (index)
+* *remove_first*: remove the first item from the collection
+* *remove_greater {element}*: remove all items from the collection that are greater than the specified one
+* *count_greater_than_mpaa_rating mpaaRating*: print the number of elements, the value of the mpaaRating field of which is greater than the given one
+* *filter_starts_with_name name*: display elements whose name field value begins with a given substring
+* *filter_less_than_oscars_count oscarsCount*: display elements whose oscarsCount field value is less than the specified one
+
+Command input format:
+* All command arguments that are standard data types (primitive types, wrapper classes, String, date storage classes) must be entered on the same line as the command name.
+* All composite data types (class objects stored in a collection) must be entered one field per line.
+* When entering composite data types, the user should be shown an input prompt containing the field name (for example, "Enter date of birth:")
+* If the field is an enum, then the name of one of its constants is entered (in this case, the list of constants must be previously displayed).
+* In case of incorrect user input (a string is entered that is not the name of a constant in the enum; a string is entered instead of a number; the entered number is not included in the specified limits, etc.) an error message should be displayed and the field should be prompted to re-enter the field.
+* Use an empty string to enter null values.
+* Fields with the comment "The value of this field should be generated automatically" should not be entered manually by the user when adding.
+
+Description of the classes stored in the collection:
+```java
+public class Movie 
+{
+    private long id; // should be > 0, unique, generated automatically
+    private String name; // can't be null or empty
+    private Coordinates coordinates; // can't be null
+    private java.util.Date creationDate; // can't be null, should be generated automatically
+    private Long oscarsCount; // must be > 0, can't be null
+    private int goldenPalmCount; // must be > 0
+    private MovieGenre genre; // can't be null
+    private MpaaRating mpaaRating; // can't be null
+    private Person screenwriter;
+}
+public class Coordinates 
+{
+    private Long x; // can't be null, max value: 414
+    private Float y; // can't be null, max value: 211
+}
+public class Person 
+{
+    private String name; // can't be null or empty
+    private int height; // value should be > 0
+    private long weight; // value should be > 0
+}
+public enum MovieGenre 
+{
+    WESTERN,
+    COMEDY,
+    MUSICAL,
+    ADVENTURE,
+    THRILLER;
+}
+public enum MpaaRating 
+{
+    G,
+    PG,
+    PG_13,
+    R;
+}
+```
