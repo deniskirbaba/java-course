@@ -160,3 +160,43 @@ public enum MpaaRating
     R;
 }
 ```
+
+## Laboratory work #6
+
+Divide the program from laboratory work #5 into client and server modules. The server module must execute commands for managing the collection. The client module must interactively read commands, send them for execution to the server, and output the results of execution.
+
+The following requirements must be met:
+* Collection object processing operations must be implemented using the Stream API using lambda expressions.
+* Objects between client and server must be serialized.
+* Objects in the collection passed to the client should be sorted by default.
+* The client must correctly handle temporary server unavailability.
+* The exchange of data between the client and the server must be carried out using the TCP protocol.
+* To exchange data on the server, you must use a network channel.
+* To exchange data on the client, you must use I / O streams.
+* Network links must be used in non-blocking mode.
+
+Responsibilities of the server application:
+* Working with a file that stores a collection.
+* Managing a collection of objects.
+* Assigning automatically generated fields to objects in a collection.
+* Waiting for connections and requests from the client.
+* Processing received requests (commands).
+* Saving the collection to a file when the application exits.
+* Saving a collection to a file when executing a special command available only to the server (the client cannot send such a command).
+
+The server application should consist of the following modules (implemented as one or more classes):
+* The module for accepting connections.
+* Request reader.
+* The module for processing received commands.
+* Module for sending responses to the client.
+
+The server must be running in single threaded mode.
+
+Responsibilities of the client application:
+* Reading commands from the console.
+* Validation of input data.
+* Serialization of the entered command and its arguments.
+* Sending the received command and its arguments to the server.
+* Processing a response from the server (outputting the result of command execution to the console).
+* The save command must be removed from the client application.
+* The exit command terminates the client application.
