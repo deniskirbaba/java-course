@@ -204,7 +204,7 @@ Responsibilities of the client application:
 ## Laboratory work #7
 
 Modify the program from laboratory work #6 as follows:
-* Organize collection storage in a relational DBMS (PostgresQL). Remove storage of the collection in a file.
+* Organize collection storage in a relational DBMS (PostgreSQL). Remove storage of the collection in a file.
 * Use the database facility (sequence) to generate the id field.
 * Update the state of the collection in memory only when the object is successfully added to the database
 * All data retrieval commands must work with the collection in memory, not in the database
