@@ -200,3 +200,23 @@ Responsibilities of the client application:
 * Processing a response from the server (outputting the result of command execution to the console).
 * The save command must be removed from the client application.
 * The exit command terminates the client application.
+
+## Laboratory work #7
+
+Modify the program from laboratory work #6 as follows:
+* Organize collection storage in a relational DBMS (PostgresQL). Remove storage of the collection in a file.
+* Use the database facility (sequence) to generate the id field.
+* Update the state of the collection in memory only when the object is successfully added to the database
+* All data retrieval commands must work with the collection in memory, not in the database
+* Organize the possibility of registration and authorization of users. The user has the option to specify a password.
+* Store passwords hashed using the SHA-384 algorithm
+* Prevent unauthorized users from executing commands.
+* When storing objects, store information about the user who created this object.
+* Users should be able to view all objects in the collection, but only those that belong to them can be modified.
+* To identify the user, send a username and password with each request.
+
+It is necessary to implement multithreaded request processing:
+* For multi-threaded reading of requests, use the creation of a new thread (java.lang.Thread)
+* For multi-threaded processing of the received request, use the creation of a new thread (java.lang.Thread)
+* For multithreading sending a response, use creating a new thread (java.lang.Thread)
+* To synchronize access to collection use read / write sync with java.util.concurrent.locks.ReentrantLock
