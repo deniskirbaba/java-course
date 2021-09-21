@@ -1,6 +1,9 @@
+package commands;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import data.*;
 
 public class Show implements Serializable
 {
