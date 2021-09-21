@@ -1,23 +1,12 @@
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Denis Kirbaba
- * @version 1.0
- * Class, containing help command
- */
 public class Help
 {
-    /** Field for manual */
-    private HashMap<String, String> manual;
+    private HashMap<String, String> manual = new HashMap<>();
 
-    /**
-     * Function for initializing help-manual
-     */
-    public void initialize()
+    public void print()
     {
-        this.manual = new HashMap<>();
-
         this.manual.put("help", " - display manual for available commands");
         this.manual.put("info", " - print collection information");
         this.manual.put("show", " - print all elements of the collection");
@@ -33,14 +22,7 @@ public class Help
         this.manual.put("count_greater_than_mpaa_rating mpaaRating", " - print the number of elements, the value of the mpaaRating field of which is greater than the given one");
         this.manual.put("filter_starts_with_the_name name", " - display elements whose name field value begins with a given substring");
         this.manual.put("filter_less_than_oscars_count oscarsCount", " - display elements whose oscarsCount field value is less than the specified one");
-    }
 
-    /**
-     * Function for printing help-manual
-     */
-    public void print()
-    {
-        this.initialize();
         for (Map.Entry<String, String> entry : manual.entrySet())
         {
             System.out.println(entry.getKey() + entry.getValue());

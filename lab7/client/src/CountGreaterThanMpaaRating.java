@@ -1,10 +1,9 @@
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.InputMismatchException;
 
 public class CountGreaterThanMpaaRating implements Serializable
 {
-    private int counter;
+    private int counter = 0;
     MpaaRating mpaaRating;
 
     public boolean setMpaaRating(String strMpaaRating)
@@ -41,14 +40,17 @@ public class CountGreaterThanMpaaRating implements Serializable
         return false;
     }
 
+    public void printResult()
+    {
+        if (this.counter == 0)
+            System.out.println("There are no movies whose rating is higher than " + this.mpaaRating + '.');
+        else
+            System.out.println("There are " + counter + " movies whose rating is higher than " + mpaaRating + '.');
+    }
+
     public MpaaRating getMpaaRating()
     {
         return this.mpaaRating;
-    }
-
-    public int getCounter()
-    {
-        return this.counter;
     }
 
     public void setCounter(int counter)

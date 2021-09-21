@@ -1,34 +1,41 @@
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Update implements Serializable
 {
-    private Movie movie;
-    private int id;
+    private String id;
+    private String name;
+    private Coordinates coordinates;
+    private long oscarsCount;
+    private Integer goldenPalmCount;
+    private MovieGenre genre;
+    private MpaaRating mpaaRating;
+    private Person screenwriter;
 
     public Update()
     {
-        this.movie = new Movie(this.getName(), this.getCoordinates(), this.getOscarsCount(),
-                this.getGoldenPalmCount(), this.getGenre(), this.getMpaaRating(), this.getScreenwriter());
+        this.name = getFromInputName();
+        this.coordinates = new Coordinates(this.getFromInputX(), this.getFromInputY());
+        this.oscarsCount = getFromInputOscarsCount();
+        this.goldenPalmCount = getFromInputGoldenPalmCount();
+        this.genre = getFromInputGenre();
+        this.mpaaRating = getFromInputMpaaRating();
+        this.screenwriter = new Person(this.getFromInputScreenwriterName(), this.getFromInputScreenwriterHeight(),
+                this.getFromInputScreenwriterWeight());
     }
 
-    public Update(String[] args)
+    public Update(String args[])
     {
-        movie.setName(args[0]);
-
-        movie.setCoordinates(new Coordinates(Long.valueOf(args[1]), Long.parseLong(args[2])));
-
-        movie.setOscars(Long.parseLong(args[3]));
-
-        movie.setGoldenPalms(Integer.valueOf(args[4]));
-
-        movie.setGenre(getGenre(args[5]));
-
-        movie.setMpaaRating(getMpaaRating(args[6]));
-
-        movie.setScreenwriter(new Person(args[7], Integer.parseInt(args[8]), Float.parseFloat(args[9])));
+        this.name = args[0];
+        this.coordinates = new Coordinates(Long.valueOf(args[1]), Long.parseLong(args[2]));
+        this.oscarsCount = Long.parseLong(args[3]);
+        this.goldenPalmCount = Integer.valueOf(args[4]);
+        this.genre = MovieGenre.stringToGenre(args[5]);
+        this.mpaaRating = MpaaRating.stringToMpaaRating(args[6]);
+        this.screenwriter = new Person(args[7], Integer.parseInt(args[8]), Float.parseFloat(args[9]));
     }
 
     public boolean setID(String strID)
@@ -37,7 +44,7 @@ public class Update implements Serializable
         {
             int id = Integer.parseInt(strID);
             if (id > 0) {
-                this.id = id;
+                this.id = strID;
                 return true;
             }
             else
@@ -53,17 +60,27 @@ public class Update implements Serializable
         return false;
     }
 
-    public Movie getMovie()
+    public String getName()
     {
-        return this.movie;
+        return this.name;
     }
 
-    public int getId()
+    public long getOscarsCount()
+    {
+        return this.oscarsCount;
+    }
+
+    public Integer getGoldenPalmCount()
+    {
+        return this.goldenPalmCount;
+    }
+
+    public String getId()
     {
         return this.id;
     }
 
-    public String getName()
+    public String getFromInputName()
     {
         while (true)
         {
@@ -91,18 +108,12 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get both (X,Y) coordinates from user
-     */
     public Coordinates getCoordinates()
     {
-        return new Coordinates(getX(), getY());
+        return this.coordinates;
     }
 
-    /**
-     * Method to get the number of Oscars from user
-     */
-    public long getOscarsCount()
+    public long getFromInputOscarsCount()
     {
         while (true)
         {
@@ -130,10 +141,7 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get the number of Golden Palms from user
-     */
-    public Integer getGoldenPalmCount()
+    public Integer getFromInputGoldenPalmCount()
     {
         while (true)
         {
@@ -141,13 +149,18 @@ public class Update implements Serializable
             {
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("Enter number of golden palms: ");
-                int goldenPalms = scanner.nextInt();
-                if (goldenPalms < 1)
+                Integer goldenpalms = scanner.nextInt();
+                if (goldenpalms.equals(""))
+                {
+                    System.out.println("This value cannot be empty.");
+                    continue;
+                }
+                if (goldenpalms < 1)
                 {
                     System.out.println("Value should be > 0.");
                     continue;
                 }
-                return goldenPalms;
+                return goldenpalms;
             }
             catch (InputMismatchException inputMismatchException)
             {
@@ -161,10 +174,7 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get movie genre from user via command line
-     */
-    public MovieGenre getGenre()
+    public MovieGenre getFromInputGenre()
     {
         while (true)
         {
@@ -202,10 +212,7 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get movie MPAA rating from user via command line
-     */
-    public MpaaRating getMpaaRating()
+    public MpaaRating getFromInputMpaaRating()
     {
         while (true)
         {
@@ -241,18 +248,12 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get movie screenwriter's info
-     */
     public Person getScreenwriter()
     {
-        return new Person(getScreenwriterName(), getScreenwriterHeight(), getScreenwriterWeight());
+        return this.screenwriter;
     }
 
-    /**
-     * Method to get screenwriter's name
-     */
-    public String getScreenwriterName()
+    public String getFromInputScreenwriterName()
     {
         while (true)
         {
@@ -279,10 +280,7 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get screenwriter's height
-     */
-    public int getScreenwriterHeight()
+    public int getFromInputScreenwriterHeight()
     {
         while (true)
         {
@@ -309,10 +307,7 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get screenwriter's weight
-     */
-    public float getScreenwriterWeight()
+    public float getFromInputScreenwriterWeight()
     {
         while (true)
         {
@@ -340,10 +335,7 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get X coordinate from user
-     */
-    public Long getX()
+    public Long getFromInputX()
     {
         while (true)
         {
@@ -351,7 +343,12 @@ public class Update implements Serializable
             {
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("Enter X coordinate (max value is 414): ");
-                long x = scanner.nextLong();
+                Long x = scanner.nextLong();
+                if (x.equals(""))
+                {
+                    System.out.println("This value cannot be empty.");
+                    continue;
+                }
                 if (x > 414){
                     System.out.println("Max value is 414.");
                     continue;
@@ -370,10 +367,7 @@ public class Update implements Serializable
         }
     }
 
-    /**
-     * Method to get Y coordinate from user
-     */
-    public long getY()
+    public long getFromInputY()
     {
         while (true)
         {
@@ -401,38 +395,13 @@ public class Update implements Serializable
         }
     }
 
-    public MovieGenre getGenre(String genre)
+    public MovieGenre getGenre()
     {
-        String category = genre.toUpperCase();
-        switch (category)
-        {
-            case "WESTERN": return MovieGenre.WESTERN;
-            case "COMEDY": return MovieGenre.COMEDY;
-            case "MUSICAL": return MovieGenre.MUSICAL;
-            case "ADVENTURE": return MovieGenre.ADVENTURE;
-            case "THRILLER": return MovieGenre.THRILLER;
-            default: return null;
-        }
+        return this.genre;
     }
 
-    /**
-     * Method to get movie MPAA rating from user via file
-     */
-    public MpaaRating getMpaaRating(String mpaaRating)
+    public MpaaRating getMpaaRating()
     {
-        String category = mpaaRating.toUpperCase();
-        switch (category)
-        {
-            case "G":
-                return MpaaRating.G;
-            case "PG":
-                return MpaaRating.PG;
-            case "PG_13":
-                return MpaaRating.PG_13;
-            case "R":
-                return MpaaRating.R;
-            default:
-                return null;
-        }
+        return this.mpaaRating;
     }
 }

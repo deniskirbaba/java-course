@@ -1,40 +1,21 @@
+import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Stack;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * @author Denis Kirbaba
- * @version 1.0
- * Class, required for executing user commands and managing the collection
- */
 public class Manager
 {
-    /** Collection for movie storage */
-    private Stack<Movie> movies;
-
-    /** Field for storage date */
-    private final LocalDateTime initializationDate = LocalDateTime.now();
-
-    /** Field for collection class type */
-    private final Class<? extends Stack> collectionTypeClass;
-
-    /** Field for manual */
+    private ArrayList<Movie> movies = new ArrayList<>();
+    private LocalDateTime initializationDate = LocalDateTime.now();
+    private String collectionClassType = "ArrayList";
     protected HashMap<String, String> manual = new HashMap<>();
+    private static Manager instance;
 
-     /** Constructor */
-     public Manager(Stack<Movie> movies)
-     {
-        this.movies = movies;
-        this.collectionTypeClass = this.movies.getClass();
-        this.initializeManual();
-     }
-
-    /**
-     * Method for manual initialization
-     */
-    private void initializeManual()
+    private Manager()
     {
         this.manual.put("help", " - display manual for available commands");
         this.manual.put("info", " - print collection information");
@@ -54,238 +35,99 @@ public class Manager
         this.manual.put("filter_less_than_oscars_count oscarsCount", " - display elements whose oscarsCount field value is less than the specified one");
     }
 
-    public void add(Movie movie)
+    public static Manager getInstance()
     {
-        movie.setID();
-        movies.push(movie);
+        if (Manager.instance == null)
+            Manager.instance = new Manager();
+        return Manager.instance;
     }
 
-    /**
-     * Method to get movie genre from user via file
-     */
-    public MovieGenre getGenre(String genre) {
-        String category = genre.toUpperCase();
-        switch (category) {
-            case "WESTERN":
-                return MovieGenre.WESTERN;
-            case "COMEDY":
-                return MovieGenre.COMEDY;
-            case "MUSICAL":
-                return MovieGenre.MUSICAL;
-            case "ADVENTURE":
-                return MovieGenre.ADVENTURE;
-            case "THRILLER":
-                return MovieGenre.THRILLER;
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * Method to get movie MPAA rating from user via file
-     */
-    public MpaaRating getMpaaRating(String mpaaRating) {
-        String category = mpaaRating.toUpperCase();
-        switch (category) {
-            case "G":
-                return MpaaRating.G;
-            case "PG":
-                return MpaaRating.PG;
-            case "PG_13":
-                return MpaaRating.PG_13;
-            case "R":
-                return MpaaRating.R;
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * Method to save collection in file
-     */
-    public void save()
+    public String getCollectionTypeClass()
     {
-
+        return this.collectionClassType;
     }
 
-    /**
-     * Method to get number of objects in the collection
-     */
-    public int getNumberOfObjectsInCollection()
-    {
-        if (movies.empty())
-            return 0;
-        else
-            return movies.size();
-    }
-
-    public String update(Movie movie, int id)
-    {
-        if (movies.empty())
-        {
-            return "The collection is empty.";
-        }
-        else
-        {
-            Stream<Movie> stream = this.movies.stream();
-            Optional<Movie> optMovie = stream.filter(x -> x.getId() == id).findFirst();
-            if (optMovie.isPresent())
-            {
-                int position = this.movies.search(optMovie.get());
-                movie.setId(id);
-                this.movies.set(this.movies.size() - position, movie);
-
-                System.out.println();
-
-                return "Object updated successfully.";
-            }
-            else
-                return "The object with the given id does not exist.";
-        }
-    }
-
-    /**
-     * Method to remove object by ID
-     */
-    public String removeById(int id)
-    {
-        if (this.movies.empty())
-        {
-            return "The collection is empty.";
-        }
-        else
-        {
-            Stream<Movie> stream = this.movies.stream();
-            Optional<Movie> movie = stream.filter(x -> x.getId() == id).findFirst();
-            if (movie.isPresent())
-            {
-                int position = this.movies.search(movie.get());
-                this.movies.remove(this.movies.size() - position);
-                return "Object removed successfully.";
-            }
-            else
-                return "The object with the given id does not exist.";
-        }
-    }
-
-    /**
-     * Method to clear the collection
-     */
-    public String clear()
-    {
-        if (movies.empty()) {
-            return "The collection is already empty.";
-        }
-        while (!movies.empty()) {
-            movies.clear();
-        }
-        return "The collection cleared.";
-    }
-
-    /**
-     * Method to remove an object at the specified position
-     */
-    public String removeAt(int index)
-    {
-        if (this.movies.empty())
-        {
-            return "The collection is empty.";
-        }
-        else
-        {
-            if (this.movies.size() < index)
-                return "The object with the given index does not exist.";
-            else
-            {
-                ArrayList<Movie> arrayList = movies.stream().sorted().collect(Collectors.toCollection(ArrayList::new));
-                Movie removingMovie = arrayList.get(index - 1);
-                this.removeById(removingMovie.getId());
-                return "Object deleted successfully.";
-            }
-        }
-    }
-
-    /**
-     * Method to print objects which MPAA rating's higher than the given one
-     */
-    public String countGreaterThanMpaaRating(MpaaRating mpaaRating)
-    {
-        HashMap<MpaaRating, Integer> rating = new HashMap<>();
-        rating.put(MpaaRating.G, 0);
-        rating.put(MpaaRating.PG, 1);
-        rating.put(MpaaRating.PG_13, 2);
-        rating.put(MpaaRating.R, 3);
-
-            if (movies.empty()) {
-                return "The collection is empty.";
-            } else
-            {
-                Stream<Movie> stream = movies.stream();
-                long counter = stream.map(Movie::getMpaaRating).filter(x -> rating.get(x) > rating.get(mpaaRating)).count();
-
-                if (counter == 0)
-                    return "There are no movies whose rating is higher than " + mpaaRating + '.';
-                else
-                    return "There are " + counter + " movies whose rating is higher than " + mpaaRating + '.';
-            }
-    }
-
-    /**
-     * Method to print objects which Oscars number is less than the given one
-     */
-    public ArrayList<Movie> filterLessThanOscars(long oscarsCount)
-    {
-        ArrayList<Movie> movieArrayList = new ArrayList<>();
-
-         if (!movies.empty())
-             movieArrayList = movies.stream().filter(x -> x.getOscars() < oscarsCount).sorted().collect(Collectors.toCollection(ArrayList::new));
-         return movieArrayList;
-    }
-
-    /**
-     * Method to print objects which name's staring with the given substring
-     */
-    public ArrayList<Movie> filterStartsWithTheName(String prefix)
-        {
-            ArrayList<Movie> movieArrayList = new ArrayList<>();
-
-            if (!movies.empty())
-                movieArrayList = movies.stream().filter(x -> x.getName().toLowerCase().startsWith(prefix)).sorted().collect(Collectors.toCollection(ArrayList::new));
-            return movieArrayList;
-        }
-
-    public void removeGreater(Movie movie)
-    {
-        this.movies = this.movies.stream().filter(x -> x.compareTo(movie) < 0).collect(Collectors.toCollection(Stack::new));
-    }
-
-    /**
-     * Getter for collection type class
-     */
-    public Class getCollectionTypeClass()
-    {
-        return this.collectionTypeClass;
-    }
-
-    public Stack<Movie> getMovies()
-    {
-        return this.movies;
-    }
-
-    /**
-     * Getter for initialization date
-     */
     public LocalDateTime getInitializationDate()
     {
         return this.initializationDate;
     }
-    
+
+    public int getNumberOfObjectsInCollection()
+    {
+        return this.movies.size();
+    }
+
+    public void add(Movie movie)
+    {
+        this.movies.add(movie);
+    }
+
+    public void clear()
+    {
+        this.movies.clear();
+    }
+
+    public ArrayList<Movie> getMovies()
+    {
+        return this.movies;
+    }
+
+    public long countGreaterThanMpaaRating(MpaaRating mpaaRating)
+    {
+            HashMap<MpaaRating, Integer> rating = new HashMap<>();
+            rating.put(MpaaRating.G, 0);
+            rating.put(MpaaRating.PG, 1);
+            rating.put(MpaaRating.PG_13, 2);
+            rating.put(MpaaRating.R, 3);
+
+            if (movies.isEmpty())
+            {
+                return 0;
+            }
+            else
+            {
+                Stream<Movie> stream = movies.stream();
+                long counter = stream.map(Movie::getMpaaRating).filter(x -> rating.get(x) > rating.get(mpaaRating)).count();
+                return counter;
+            }
+    }
+
+    public ArrayList<Movie> filterLessThanOscars(long oscarsCount)
+    {
+        ArrayList<Movie> movieArrayList = new ArrayList<>();
+
+        if (!movies.isEmpty())
+            movieArrayList = movies.stream().filter(x -> x.getOscarsCount() < oscarsCount).sorted().collect(Collectors.toCollection(ArrayList::new));
+        return movieArrayList;
+    }
+
+    public ArrayList<Movie> filterStartsWithTheName(String prefix)
+    {
+        ArrayList<Movie> movieArrayList = new ArrayList<>();
+
+        if (!movies.isEmpty())
+            movieArrayList = movies.stream().filter(x -> x.getName().toLowerCase().startsWith(prefix)).sorted().collect(Collectors.toCollection(ArrayList::new));
+        return movieArrayList;
+    }
+
     public boolean ifIdExists(long id)
     {
         long count = 0;
 
-        if (!movies.empty())
+        if (!movies.isEmpty())
             count = movies.stream().filter(x -> x.getId() == id).count();
+        if (count>0)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean ifIdAvailable(long id, String login)
+    {
+        long count = 0;
+
+        if (!movies.isEmpty())
+            count = movies.stream().filter(x -> x.getId() == id && Objects.equals(x.getUser(), login)).count();
         if (count>0)
             return true;
         else

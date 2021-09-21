@@ -7,7 +7,8 @@ public class FilterLessThanOscarsCount implements Serializable
     private long oscarsCount;
     private ArrayList<Movie> movieArrayList;
 
-    public long getOscarsCount() {
+    public long getOscarsCount()
+    {
         return oscarsCount;
     }
 
@@ -20,7 +21,7 @@ public class FilterLessThanOscarsCount implements Serializable
         }
         catch (NumberFormatException | InputMismatchException numberFormatException)
         {
-            System.out.println("Number of Oscars must be long.");
+            System.out.println("Number of oscars must be int.");
             return false;
         }
     }

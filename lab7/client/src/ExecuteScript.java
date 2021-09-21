@@ -1,22 +1,21 @@
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-
 import java.io.*;
-import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.Locale;
 
-public class ExecuteScript implements Serializable {
+public class ExecuteScript implements Serializable
+{
     private String filePath;
-    /**
-     * Field for containing file path in execute_script method
-     */
     private static ArrayList<String> filePaths = new ArrayList<>();
-    private ByteBuffer buffer;
+    private String login;
 
-    public void setFilePath(String filePath) {
+    public ExecuteScript(String login)
+    {
+        this.login = login;
+    }
+
+    public void setFilePath(String filePath)
+    {
         this.filePath = filePath;
     }
 
@@ -25,12 +24,8 @@ public class ExecuteScript implements Serializable {
         filePaths.clear();
     }
 
-    /**
-     * Method for checking a file for writing or reading
-     *
-     * @param writeFlag - flag for choosing between writing (true) and reading (false)
-     */
-    public boolean checkFileForWriteRead(boolean writeFlag) throws IOException {
+    public boolean checkFileForWriteRead(boolean writeFlag) throws IOException
+    {
         if (this.filePath == null) {
             System.out.println("File path is null.");
             return false;
@@ -38,7 +33,8 @@ public class ExecuteScript implements Serializable {
 
         File file = new File(this.filePath);
 
-        if (!(file.exists())) {
+        if (!(file.exists()))
+        {
             System.out.println("File at the specified path does not exist.");
             return false;
         }
@@ -59,44 +55,51 @@ public class ExecuteScript implements Serializable {
         return true;
     }
 
-    public void start(SocketChannel client)
+    public boolean start(ObjectOutputStream oos, ObjectInputStream ois)
     {
-        this.buffer = ByteBuffer.allocate(32768);
         if (!filePaths.contains(filePath))
         {
-            this.filePaths.add(filePath);
+            filePaths.add(filePath);
 
-            int numberOfFields = Movie.class.getDeclaredFields().length;
+            int numberOfFields = 10;
 
-            try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filePath))) {
-                int nextByte = 0;
-                String s = "";
-
+            try (FileReader fileReader = new FileReader(this.filePath))
+            {
                 ArrayList<String> contents = new ArrayList<>();
 
-                while ((nextByte = bis.read()) != -1) {
-                    char nextChar = (char) nextByte;
-                    if (nextChar == '\n') {
-                        contents.add(s);
-                        s = "";
-                    } else {
-                        s += nextChar;
+                int c;
+                String string = "";
+                while ((c = fileReader.read()) != -1)
+                {
+                    char nextChar = (char) c;
+                    if (nextChar == '\n')
+                    {
+                        contents.add(string);
+                        string = "";
+                    }
+                    else
+                    {
+                        string += nextChar;
                     }
                 }
-                contents.add(s);
+                contents.add(string);
 
-                for (int i = 0; i < contents.size(); i++) {
+                for (int i = 0; i < contents.size(); i++)
+                {
                     if (contents.get(i).equals(""))
                         contents.remove(i);
                 }
 
-                String commandArguments[];
+                String[] commandArguments;
 
-                for (int i = 0; i < contents.size(); i++) {
-                    commandArguments = contents.get(i).trim().split("\\s+"); // elimination of whitespaces and tabs
+                for (int i = 0; i < contents.size(); i++)
+                {
+                    commandArguments = contents.get(i).trim().split("\\s+");
 
-                    try {
-                        switch (commandArguments[0]) {
+                    try
+                    {
+                        switch (commandArguments[0])
+                        {
                             case "":
                                 break;
                             case "help":
@@ -105,171 +108,160 @@ public class ExecuteScript implements Serializable {
                                 break;
                             case "info":
                                 Info info = new Info();
-                                if (!send(client, info))
-                                    break;
-                                info = (Info) this.read(client);
-                                if (info == null)
-                                    break;
+                                oos.writeObject(info);
+                                info = (Info) ois.readObject();
                                 info.print();
                                 break;
+                            case "exit":
+                                return true;
                             case "add":
                                 String[] args = new String[numberOfFields];
                                 for (int j = 0; j < numberOfFields; j++)
                                     args[j] = contents.get(i + j + 1).trim();
                                 i += numberOfFields;
-                                Add add = new Add(args);
-                                if (!send(client, add))
-                                    break;
+                                Add add = new Add(this.login, args);
+                                oos.writeObject(add);
+                                System.out.println((String)ois.readObject());
                                 break;
                             case "show":
                                 Show show = new Show();
-                                if (!send(client, show))
-                                    break;
-                                show = (Show) this.read(client);
-                                if (show == null)
-                                    break;
+                                oos.writeObject(show);
+                                show = (Show) ois.readObject();
                                 show.print();
                                 break;
-                            case "update":
-                                if (commandArguments.length != 1) {
-                                    if (this.checkId(commandArguments[1], client)) {
-                                        String[] argsUpdate = new String[numberOfFields];
-                                        for (int j = 0; j < numberOfFields; j++) {
-                                            argsUpdate[j] = contents.get(i + j + 1).trim();
-                                        }
-                                        i += numberOfFields;
-                                        Update update = new Update(argsUpdate);
-                                        if (update.setID(commandArguments[1])) {
-                                            if (!send(client, update))
-                                                break;
-                                            String output = (String) this.read(client);
-                                            if (output == null)
-                                                break;
-                                            System.out.println(output);
-                                        }
-                                    } else
-                                        System.out.println("This function requires the parameter.");
-                                    break;
+                            case "count_greater_than_mpaa_rating":
+                                if (commandArguments.length != 1)
+                                {
+                                    CountGreaterThanMpaaRating countGreaterThanMpaaRating = new CountGreaterThanMpaaRating();
+                                    commandArguments[1] = commandArguments[1].toUpperCase(Locale.ROOT);
+                                    if (countGreaterThanMpaaRating.setMpaaRating(commandArguments[1]))
+                                    {
+                                        oos.writeObject(countGreaterThanMpaaRating);
+                                        countGreaterThanMpaaRating = (CountGreaterThanMpaaRating) ois.readObject();
+                                        countGreaterThanMpaaRating.printResult();
+                                    }
                                 }
                                 else
-                                    break;
-                        case "remove_by_id":
-                            if (commandArguments.length != 1)
-                            {
-                                RemoveById removeById = new RemoveById();
-                                if (removeById.setId(commandArguments[1]))
+                                    System.out.println("This function requires the parameter.");
+                                break;
+                            case "filter_less_than_oscars_count":
+                                if (commandArguments.length != 1)
                                 {
-                                    if (!send(client, removeById))
-                                        break;
-                                    String output = (String) this.read(client);
-                                    if (output == null)
-                                        break;
-                                    System.out.println(output);
+                                    FilterLessThanOscarsCount filterLessThanOscarsCount = new FilterLessThanOscarsCount();
+                                    if (filterLessThanOscarsCount.setOscarsCount(commandArguments[1]))
+                                    {
+                                        oos.writeObject(filterLessThanOscarsCount);
+                                        filterLessThanOscarsCount = (FilterLessThanOscarsCount) ois.readObject();
+                                        filterLessThanOscarsCount.print();
+                                    }
                                 }
-                            } else
-                                System.out.println("This function requires the parameter.");
-                            break;
-                        case "clear":
-                            Clear clear = new Clear();
-                            if (!send(client, clear))
+                                else
+                                    System.out.println("This function requires the parameter.");
                                 break;
-                            String output = (String) this.read(client);
-                            if (output == null)
-                                break;
-                            System.out.println(output);
-                            break;
-                        case "remove_at":
-                            if (commandArguments.length != 1) {
-                                RemoveAt removeAt = new RemoveAt();
-                                if (removeAt.setIndex(commandArguments[1])) {
-                                    if (!send(client, removeAt))
-                                        break;
-                                    String remove_at = (String) this.read(client);
-                                    if (remove_at == null)
-                                        break;
-                                    System.out.println(remove_at);
-                                }
-                            } else
-                                System.out.println("This function requires the parameter.");
-                            break;
-                        case "remove_first":
-                            RemoveAt removeFirst = new RemoveAt();
-                            removeFirst.setIndex("1");
-                            if (!send(client, removeFirst))
-                                break;
-                            String remove_first = (String) this.read(client);
-                            if (remove_first == null)
-                                break;
-                            System.out.println(remove_first);
-                            break;
-                        case "count_greater_than_mpaa_rating":
-                            if (commandArguments.length != 1) {
-                                CountGreaterThanMpaaRating countGreaterThanMpaaRating = new CountGreaterThanMpaaRating();
-                                if (countGreaterThanMpaaRating.setMpaaRating(commandArguments[1])) {
-                                    if (!send(client, countGreaterThanMpaaRating))
-                                        break;
-                                    String count_greater_than_mpaa_rating = (String) this.read(client);
-                                    if (count_greater_than_mpaa_rating == null)
-                                        break;
-                                    System.out.println(count_greater_than_mpaa_rating);
-                                }
-                            } else
-                                System.out.println("This function requires the parameter.");
-                            break;
-                        case "filter_less_than_oscars_count":
-                            if (commandArguments.length != 1) {
-                                FilterLessThanOscarsCount filterLessThanOscarsCount = new FilterLessThanOscarsCount();
-                                if (filterLessThanOscarsCount.setOscarsCount(commandArguments[1])) {
-                                    if (!send(client, filterLessThanOscarsCount))
-                                        break;
-                                    filterLessThanOscarsCount = (FilterLessThanOscarsCount) this.read(client);
-                                    if (filterLessThanOscarsCount == null)
-                                        break;
-                                    filterLessThanOscarsCount.print();
-                                }
-                            } else
-                                System.out.println("This function requires the parameter.");
-                            break;
                             case "filter_starts_with_the_name":
-                                if (commandArguments.length != 1) {
+                                if (commandArguments.length != 1)
+                                {
                                     FilterStartsWithTheName filterStartsWithTheName = new FilterStartsWithTheName();
                                     filterStartsWithTheName.setStartingString(commandArguments[1]);
-                                    if (!send(client, filterStartsWithTheName))
-                                        break;
-                                    filterStartsWithTheName = (FilterStartsWithTheName) this.read(client);
-                                    if (filterStartsWithTheName == null)
-                                        break;
+                                    oos.writeObject(filterStartsWithTheName);
+                                    filterStartsWithTheName = (FilterStartsWithTheName) ois.readObject();
                                     filterStartsWithTheName.print();
                                 } else
                                     System.out.println("This function requires the parameter.");
                                 break;
-                        case "remove_greater":
-                            String[] argsGreater = new String[numberOfFields];
-                            for (int j = 0; j < numberOfFields; j++)
-                                argsGreater[j] = contents.get(i + j + 1).trim();
-                            i += numberOfFields;
-                            RemoveGreater removeGreater = new RemoveGreater(argsGreater);
-                            if (!send(client, removeGreater))
-                                break;
-                            break;
-                        case "execute_script":
-                            if (commandArguments.length != 1)
-                            {
-                                ExecuteScript executeScript = new ExecuteScript();
-                                executeScript.setFilePath(commandArguments[1]);
-                                if (executeScript.checkFileForWriteRead(false))
+                            case "update":
+                                if (commandArguments.length != 1)
                                 {
-                                    System.out.println("Executing commands from " + commandArguments[1]);
-                                    executeScript.start(client);
+                                    if (this.checkId(commandArguments[1], oos, ois))
+                                    {
+                                        String[] uargs = new String[numberOfFields];
+                                        for (int j = 0; j < numberOfFields; j++)
+                                            uargs[j] = contents.get(i + j + 1).trim();
+                                        i += numberOfFields;
+                                        Update update = new Update(uargs);
+                                        update.setID(commandArguments[1]);
+                                        oos.writeObject(update);
+                                        System.out.println((String)ois.readObject());
+                                    }
+                                } else
+                                    System.out.println("This function requires the parameter.");
+                                break;
+                            case "remove_by_id":
+                                if (commandArguments.length != 1)
+                                {
+                                    if (this.checkId(commandArguments[1], oos, ois))
+                                    {
+                                        RemoveById removeById = new RemoveById();
+                                        removeById.setId(commandArguments[1]);
+                                        oos.writeObject(removeById);
+                                        System.out.println((String)ois.readObject());
+                                    }
                                 }
-                            }
-                            else
-                                System.out.println("This function requires the parameter.");
-                            break;
-                            default: {
+                                else
+                                    System.out.println("This function requires the parameter.");
+                                break;
+                            case "clear":
+                                Clear clear = new Clear();
+                                clear.setUser(this.login);
+                                oos.writeObject(clear);
+                                System.out.println((String)ois.readObject());
+                                break;
+                            case "remove_at":
+                                if (commandArguments.length != 1)
+                                {
+                                    RemoveAt removeAt = new RemoveAt();
+                                    if (removeAt.setIndex(commandArguments[1]))
+                                    {
+                                        removeAt.setUser(this.login);
+                                        oos.writeObject(removeAt);
+                                        removeAt = (RemoveAt) ois.readObject();
+                                        removeAt.printResult();
+                                    }
+                                } else
+                                    System.out.println("This function requires the parameter.");
+                                break;
+                            case "remove_first":
+                                RemoveAt removeFirst = new RemoveAt();
+                                removeFirst.setIndex("1");
+                                removeFirst.setUser(this.login);
+                                oos.writeObject(removeFirst);
+                                removeFirst = (RemoveAt) ois.readObject();
+                                removeFirst.printResult();
+                                break;
+                            case "remove_greater":
+                                String[] rargs = new String[numberOfFields];
+                                for (int j = 0; j < numberOfFields; j++)
+                                    rargs[j] = contents.get(i + j + 1).trim();
+                                i += numberOfFields;
+                                RemoveGreater removeGreater = new RemoveGreater(this.login, rargs);
+                                oos.writeObject(removeGreater);
+                                removeGreater = (RemoveGreater) ois.readObject();
+                                removeGreater.printResult();
+                                break;
+                            case "execute_script":
+                                if (commandArguments.length != 1)
+                                {
+                                    ExecuteScript executeScript = new ExecuteScript(this.login);
+                                    executeScript.setFilePath(commandArguments[1]);
+                                    if (executeScript.checkFileForWriteRead(false))
+                                    {
+                                        System.out.println("Executing commands from " + commandArguments[1]);
+                                        executeScript.start(oos, ois);
+                                    }
+                                }
+                                else
+                                    System.out.println("This function requires the parameter.");
+                                break;
+                            default:
+                            {
                                 System.out.println("Unknown command. Write 'help' for reference.");
                             }
                         }
+                    }
+                    catch (IOException e)
+                    {
+                        System.out.println("Server is not available.");
+                        break;
                     }
                     catch (NumberFormatException | IndexOutOfBoundsException exception)
                     {
@@ -278,10 +270,6 @@ public class ExecuteScript implements Serializable {
                 }
             } catch (FileNotFoundException fileNotFoundException) {
                 System.out.println("File not found.");
-            }
-            catch (SocketException socketException)
-            {
-                System.out.println("Server is not available.");
             }
             catch (IOException ioException)
             {
@@ -293,45 +281,10 @@ public class ExecuteScript implements Serializable {
             System.out.println("Recursion detected, commands from files were run only once.");
             ExecuteScript.filePaths.clear();
         }
+        return false;
     }
 
-    public boolean send(SocketChannel socket, Serializable serializable) throws IOException
-    {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(serializable);
-            oos.close();
-            ByteBuffer wrap = ByteBuffer.wrap(baos.toByteArray());
-            socket.write(wrap);
-            return true;
-        }
-        catch (IOException ioException)
-        {
-            System.out.println("Server is not available.");
-            return false;
-        }
-    }
-
-    public Serializable read(SocketChannel socket) throws IOException, ClassNotFoundException
-    {
-        try
-        {
-            this.buffer.clear();
-            socket.read(this.buffer);
-            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(this.buffer.array()));
-            Serializable result = (Serializable) ois.readObject();
-            this.buffer.clear();
-            return result;
-        }
-        catch (IOException ioException)
-        {
-            System.out.println("Server is not available.");
-            return null;
-        }
-    }
-
-    public boolean checkId(String strId, SocketChannel client)
+    public boolean checkId(String strId, ObjectOutputStream oos, ObjectInputStream ois)
     {
         try
         {
@@ -339,29 +292,27 @@ public class ExecuteScript implements Serializable {
             if (id > 0)
             {
                 CheckId checkId = new CheckId(id);
-                this.send(client, checkId);
-                checkId = (CheckId) this.read(client);
-                if (checkId.isExist())
-                    return true;
-                else {
+                oos.writeObject(checkId);
+                checkId = (CheckId) ois.readObject();
+                if (!checkId.isExist()) {
                     System.out.println("This id does not exist.");
                     return false;
+                }
+                else if (!checkId.isAvailable())
+                {
+                    System.out.println("You cannot modify an object that does not belong to you.");
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
             }
             else
                 System.out.println("ID must be > 0.");
         }
-        catch (NumberFormatException numberFormatException)
-        {
+        catch (NumberFormatException | InputMismatchException | IOException | ClassNotFoundException numberFormatException) {
             System.out.println("ID must be integer.");
-        }
-        catch (InputMismatchException inputMismatchException)
-        {
-            System.out.println("ID must be integer.");
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } catch (ClassNotFoundException classNotFoundException) {
-            classNotFoundException.printStackTrace();
         }
         return false;
     }

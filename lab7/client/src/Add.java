@@ -1,28 +1,53 @@
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Add implements Serializable
 {
-    private Movie movie;
+    private String name;
+    private Coordinates coordinates;
+    private String creationDate;
+    private long oscarsCount;
+    private Integer goldenPalmCount;
+    private MovieGenre genre;
+    private MpaaRating mpaaRating;
+    private Person screenwriter;
+    private String user;
 
-    public Add()
+    public Add(String user)
     {
-        this.movie = new Movie(this.getName(), this.getCoordinates(), this.getOscarsCount(),
-                this.getGoldenPalmCount(), this.getGenre(), this.getMpaaRating(), this.getScreenwriter());
+        this.name = this.getFromInputName();
+        this.coordinates = new Coordinates(this.getFromInputX(), this.getFromInputY());
+        LocalDateTime time = LocalDateTime.now();
+        this.creationDate = String.valueOf(time.getHour()) + ':' + time.getHour() + ' ' + time.getDayOfMonth() + '.' +
+                time.getMonthValue() + '.' + time.getYear();
+        this.oscarsCount = this.getFromInputOscarsCount();
+        this.goldenPalmCount = this.getFromInputGoldenPalmCount();
+        this.genre = this.getFromInputGenre();
+        this.mpaaRating = this.getFromInputMpaaRating();
+        this.screenwriter = new Person(this.getFromInputScreenwriterName(), this.getFromInputScreenwriterHeight(),
+                this.getFromInputScreenwriterWeight());
+        this.user = user;
     }
 
-    public Add(String args[])
+    public Add(String user, String args[])
     {
-        this.movie = new Movie(args[0], new Coordinates(Long.valueOf(args[1]), Long.parseLong(args[2])), Long.parseLong(args[3]),Integer.valueOf(args[4]), getGenre(args[5]), getMpaaRating(args[6]), new Person(args[7], Integer.parseInt(args[8]), Float.parseFloat(args[9])));
-    }
-    public Movie getMovie()
-    {
-        return this.movie;
+        this.name = args[0];
+        this.coordinates = new Coordinates(Long.valueOf(args[1]), Long.parseLong(args[2]));
+        LocalDateTime time = LocalDateTime.now();
+        this.creationDate = String.valueOf(time.getHour()) + ':' + time.getHour() + ' ' + time.getDayOfMonth() + '.' +
+                time.getMonthValue() + '.' + time.getYear();
+        this.oscarsCount = Long.parseLong(args[3]);
+        this.goldenPalmCount = Integer.valueOf(args[4]);
+        this.genre = MovieGenre.stringToGenre(args[5]);
+        this.mpaaRating = MpaaRating.stringToMpaaRating(args[6]);
+        this.screenwriter = new Person(args[7], Integer.parseInt(args[8]), Float.parseFloat(args[9]));
+        this.user = user;
     }
 
-    public String getName()
+    public String getFromInputName()
     {
         while (true)
         {
@@ -49,18 +74,8 @@ public class Add implements Serializable
             }
         }
     }
-    /**
-     * Method to get both (X,Y) coordinates from user
-     */
-    public Coordinates getCoordinates()
-    {
-        return new Coordinates(getX(), getY());
-    }
 
-    /**
-     * Method to get the number of Oscars from user
-     */
-    public long getOscarsCount()
+    public long getFromInputOscarsCount()
     {
         while (true)
         {
@@ -88,10 +103,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get the number of Golden Palms from user
-     */
-    public Integer getGoldenPalmCount()
+    public Integer getFromInputGoldenPalmCount()
     {
         while (true)
         {
@@ -124,10 +136,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get movie genre from user via command line
-     */
-    public MovieGenre getGenre()
+    public MovieGenre getFromInputGenre()
     {
         while (true)
         {
@@ -165,10 +174,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get movie MPAA rating from user via command line
-     */
-    public MpaaRating getMpaaRating()
+    public MpaaRating getFromInputMpaaRating()
     {
         while (true)
         {
@@ -204,18 +210,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get movie screenwriter's info
-     */
-    public Person getScreenwriter()
-    {
-        return new Person(getScreenwriterName(), getScreenwriterHeight(), getScreenwriterWeight());
-    }
-
-    /**
-     * Method to get screenwriter's name
-     */
-    public String getScreenwriterName()
+    public String getFromInputScreenwriterName()
     {
         while (true)
         {
@@ -242,10 +237,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get screenwriter's height
-     */
-    public int getScreenwriterHeight()
+    public int getFromInputScreenwriterHeight()
     {
         while (true)
         {
@@ -272,10 +264,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get screenwriter's weight
-     */
-    public float getScreenwriterWeight()
+    public float getFromInputScreenwriterWeight()
     {
         while (true)
         {
@@ -303,10 +292,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get X coordinate from user
-     */
-    public Long getX()
+    public Long getFromInputX()
     {
         while (true)
         {
@@ -338,10 +324,7 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get Y coordinate from user
-     */
-    public long getY()
+    public long getFromInputY()
     {
         while (true)
         {
@@ -369,41 +352,48 @@ public class Add implements Serializable
         }
     }
 
-    /**
-     * Method to get movie genre from user via file
-     */
-    public MovieGenre getGenre(String genre)
+    public String getName()
     {
-        String category = genre.toUpperCase();
-        switch (category)
-        {
-            case "WESTERN": return MovieGenre.WESTERN;
-            case "COMEDY": return MovieGenre.COMEDY;
-            case "MUSICAL": return MovieGenre.MUSICAL;
-            case "ADVENTURE": return MovieGenre.ADVENTURE;
-            case "THRILLER": return MovieGenre.THRILLER;
-            default: return null;
-        }
+        return this.name;
     }
 
-    /**
-     * Method to get movie MPAA rating from user via file
-     */
-    public MpaaRating getMpaaRating(String mpaaRating)
+    public Coordinates getCoordinates()
     {
-        String category = mpaaRating.toUpperCase();
-        switch (category)
-        {
-            case "G":
-                return MpaaRating.G;
-            case "PG":
-                return MpaaRating.PG;
-            case "PG_13":
-                return MpaaRating.PG_13;
-            case "R":
-                return MpaaRating.R;
-            default:
-                return null;
-        }
+        return this.coordinates;
+    }
+
+    public String getCreationDate()
+    {
+        return this.creationDate;
+    }
+
+    public long getOscarsCount()
+    {
+        return this.oscarsCount;
+    }
+
+    public Integer getGoldenPalmCount()
+    {
+        return this.goldenPalmCount;
+    }
+
+    public MovieGenre getGenre()
+    {
+        return this.genre;
+    }
+
+    public MpaaRating getMpaaRating()
+    {
+        return this.mpaaRating;
+    }
+
+    public Person getScreenwriter()
+    {
+        return this.screenwriter;
+    }
+
+    public String getUser()
+    {
+        return this.user;
     }
 }

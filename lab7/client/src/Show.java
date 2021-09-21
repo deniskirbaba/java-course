@@ -1,16 +1,13 @@
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class Show implements Serializable
 {
     private ArrayList<Movie> movies;
 
-    public void initialize(Stack<Movie> movies)
+    public void initialize(ArrayList<Movie> movies)
     {
-        this.movies = new ArrayList<Movie>();
         this.movies = movies.stream().sorted().collect(Collectors.toCollection(ArrayList::new));
     }
 

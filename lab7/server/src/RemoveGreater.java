@@ -6,10 +6,21 @@ import java.util.Scanner;
 public class RemoveGreater implements Serializable
 {
     private final Movie movie;
+    private String result;
 
-    public RemoveGreater() {
-        this.movie = new Movie(this.getName(), this.getCoordinates(), this.getOscarsCount(),
-                this.getGoldenPalmCount(), this.getGenre(), this.getMpaaRating(), this.getScreenwriter());
+    public RemoveGreater(String user)
+    {
+        this.movie = new Movie(0, this.getFromInputName(), this.getFromInputCoordinates(), "x",
+                this.getFromInputOscarsCount(), this.getFromInputGoldenPalmCount(), this.getFromInputGenre(),
+                this.getFromInputMpaaRating(), this.getFromInputScreenwriter(), user);
+    }
+
+    public RemoveGreater(String user, String[] args)
+    {
+        this.movie = new Movie(0, args[0], new Coordinates(Long.valueOf(args[1]), Long.parseLong(args[2])), "x",
+                Long.parseLong(args[3]), Integer.valueOf(args[4]), MovieGenre.stringToGenre(args[5]),
+                MpaaRating.stringToMpaaRating(args[6]), new Person(args[7], Integer.parseInt(args[8]), Float.parseFloat(args[9]))
+                , user);
     }
 
     public Movie getMovie()
@@ -17,7 +28,7 @@ public class RemoveGreater implements Serializable
         return this.movie;
     }
 
-    public String getName()
+    public String getFromInputName()
     {
         while (true)
         {
@@ -44,18 +55,13 @@ public class RemoveGreater implements Serializable
             }
         }
     }
-    /**
-     * Method to get both (X,Y) coordinates from user
-     */
-    public Coordinates getCoordinates()
+
+    public Coordinates getFromInputCoordinates()
     {
-        return new Coordinates(getX(), getY());
+        return new Coordinates(getFromInputX(), getFromInputY());
     }
 
-    /**
-     * Method to get the number of Oscars from user
-     */
-    public long getOscarsCount()
+    public long getFromInputOscarsCount()
     {
         while (true)
         {
@@ -83,10 +89,7 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get the number of Golden Palms from user
-     */
-    public Integer getGoldenPalmCount()
+    public Integer getFromInputGoldenPalmCount()
     {
         while (true)
         {
@@ -119,10 +122,7 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get movie genre from user via command line
-     */
-    public MovieGenre getGenre()
+    public MovieGenre getFromInputGenre()
     {
         while (true)
         {
@@ -160,10 +160,7 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get movie MPAA rating from user via command line
-     */
-    public MpaaRating getMpaaRating()
+    public MpaaRating getFromInputMpaaRating()
     {
         while (true)
         {
@@ -199,18 +196,12 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get movie screenwriter's info
-     */
-    public Person getScreenwriter()
+    public Person getFromInputScreenwriter()
     {
-        return new Person(getScreenwriterName(), getScreenwriterHeight(), getScreenwriterWeight());
+        return new Person(getFromInputScreenwriterName(), getFromInputScreenwriterHeight(), getFromInputScreenwriterWeight());
     }
 
-    /**
-     * Method to get screenwriter's name
-     */
-    public String getScreenwriterName()
+    public String getFromInputScreenwriterName()
     {
         while (true)
         {
@@ -237,10 +228,7 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get screenwriter's height
-     */
-    public int getScreenwriterHeight()
+    public int getFromInputScreenwriterHeight()
     {
         while (true)
         {
@@ -267,10 +255,7 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get screenwriter's weight
-     */
-    public float getScreenwriterWeight()
+    public float getFromInputScreenwriterWeight()
     {
         while (true)
         {
@@ -298,10 +283,7 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get X coordinate from user
-     */
-    public Long getX()
+    public Long getFromInputX()
     {
         while (true)
         {
@@ -333,10 +315,7 @@ public class RemoveGreater implements Serializable
         }
     }
 
-    /**
-     * Method to get Y coordinate from user
-     */
-    public long getY()
+    public long getFromInputY()
     {
         while (true)
         {
@@ -362,5 +341,15 @@ public class RemoveGreater implements Serializable
                 System.exit(0);
             }
         }
+    }
+
+    public void setResult(String result)
+    {
+        this.result = result;
+    }
+
+    public void printResult()
+    {
+        System.out.println(this.result);
     }
 }

@@ -1,290 +1,76 @@
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
-
-/**
- * @author Denis Kirbaba
- * @version 1.0
- * Class, describing the objects stored in the collection
- */
 
 public class Movie implements Serializable, Comparable<Movie>
 {
-    /** Field for storage an ID */
-    private int id; // should be > 0, unique, generated automatically
-    /** Field for storage ID values */
-    private static final ArrayList<Integer> idList = new ArrayList<>();
-    /** Field for name */
-    private String name; // can't be null or empty
-    /** Field for storage the coordinates */
-    private Coordinates coordinates; // can't be null
-    /** Field for storage the creation date */
-    private final String creationDate; // can't be null, should be generated automatically
-    /** Field for storage the number of Oscars */
-    private long oscarsCount; // must be > 0
-    /** Field for storage the number of Golden Palms */
-    private Integer goldenPalmCount; // can't be null, must be > 0
-    /** Field for storage movie genre */
-    private MovieGenre genre; // can't be null
-    /** Field for storage the movie MPAA rating */
-    private MpaaRating mpaaRating; // can't be null
-    /** Field for storage the screenwriter's info */
+    private int id;
+    private String name;
+    private Coordinates coordinates;
+    private String creationDate;
+    private long oscarsCount;
+    private Integer goldenPalmCount;
+    private MovieGenre genre;
+    private MpaaRating mpaaRating;
     private Person screenwriter;
+    private String user;
 
-    public Movie()
+    public Movie(int id, String name, Coordinates coordinates, String creationDate, long oscarsCount, Integer goldenPalmCount,
+                 MovieGenre genre, MpaaRating mpaaRating, Person screenwriter, String user)
     {
-        this.setID();
-        LocalDateTime time = LocalDateTime.now();
-        this.creationDate = String.valueOf(time.getHour()) + ':' + time.getHour() + ' ' + time.getDayOfMonth() + '.' + time.getMonthValue() + '.' + time.getYear();
-        this.name = "default";
-        this.coordinates = null;
-        this.oscarsCount = 1;
-        this.goldenPalmCount = 1;
-        this.genre = null;
-        this.mpaaRating = null;
-        this.screenwriter = null;
-
-    }
-
-    /**
-     * Constructor for making a movie object
-     */
-    public Movie(String name, Coordinates coordinates, long oscarsCount, Integer goldenPalmCount, MovieGenre genre, MpaaRating mpaaRating, Person screenwriter)
-    {
-        this.setID();
-        LocalDateTime time = LocalDateTime.now();
-        this.creationDate = String.valueOf(time.getHour()) + ':' + time.getHour() + ' ' + time.getDayOfMonth() + '.' + time.getMonthValue() + '.' + time.getYear();
+        this.id =id;
         this.name = name;
         this.coordinates = coordinates;
-        this.oscarsCount = oscarsCount;
-        this.goldenPalmCount = goldenPalmCount;
-        this.genre = genre;
-        this.mpaaRating = mpaaRating;
-        this.screenwriter = screenwriter;
-    }
-
-    /**
-     * Constructor for making a movie object
-     */
-    public Movie(int id, String name, Coordinates coordinates, String creationDate, long oscarsCount, Integer goldenPalmCount, MovieGenre genre, MpaaRating mpaaRating, Person screenwriter)
-    {
-        this.id = id;
         this.creationDate = creationDate;
-        this.name = name;
-        this.coordinates = coordinates;
         this.oscarsCount = oscarsCount;
         this.goldenPalmCount = goldenPalmCount;
         this.genre = genre;
         this.mpaaRating = mpaaRating;
         this.screenwriter = screenwriter;
+        this.user = user;
     }
 
-    /**
-     * Method to check the object for correct field values
-     */
-    public static boolean checkMovie(String[] fields) throws ArrayIndexOutOfBoundsException
+    public int getGoldenPalmCount()
     {
-        try
-        {
-            Movie movie = new Movie(Integer.parseInt(fields[0]), fields[1], new Coordinates(Long.valueOf(fields[2]),
-                    Long.parseLong(fields[3])), fields[4], Long.parseLong(fields[5]), Integer.valueOf(fields[6]),
-                    Movie.getGenre(fields[7]), Movie.getMpaaRating(fields[8]), new Person(fields[9], Integer.parseInt(fields[10]),
-                    Float.parseFloat(fields[11])));
-            if ((movie.coordinates.getX() < 415) && (movie.coordinates.getY() < 212) && (movie.oscarsCount > 0) && (movie.id > 0) &&
-                    (movie.name != null) && (movie.goldenPalmCount > 0) && (movie.genre != null) && (movie.mpaaRating != null) &&
-                    (movie.screenwriter.getName() != null) && (movie.screenwriter.getHeight() > 0) && (movie.screenwriter.getWeight() > 0) &&
-                    (!Movie.idList.contains(movie.id)))
-            {
-                String[] time = movie.creationDate.trim().split("\\s+");
-                String hourMinute = time[0];
-                String dayMonthYear = time[1];
-                int hour = Integer.parseInt(hourMinute.split(":")[0]);
-                int minute = Integer.parseInt(hourMinute.split(":")[1]);
-                int day = Integer.parseInt(dayMonthYear.split("\\.")[0]);
-                int month = Integer.parseInt(dayMonthYear.split("\\.")[1]);
-                int year = Integer.parseInt(dayMonthYear.split("\\.")[2]);
-                if (hour > -1 && hour < 24 && minute > -1 && minute < 60 && day > 0 && day < 32 && month > 0
-                        && month < 13 && year > -1 && year < 2022)
-                {
-                    Movie.idList.add(movie.id);
-                    return true;
-                }
-                else
-                    return false;
-            }
-            else
-                return false;
-        }
-        catch (ArrayIndexOutOfBoundsException | NumberFormatException exception)
-        {
-            return false;
-        }
+        return this.goldenPalmCount;
     }
 
-    /**
-     * Method toString
-     */
-    @Override
-    public String toString()
-    {
-        return "id:" + id + ", name:" + name + ", coordinates:" + coordinates.toString() + ", date:" + creationDate + ", Oscars:" + oscarsCount + ", Golden Palms:" + goldenPalmCount + ", genre:" + genre + ", MPAA rating:" + mpaaRating + ", screenwriter:" + screenwriter.toString();
-    }
-
-    /**
-     * Method to convert the object into the CSV format
-     */
-    public String getCSVString()
-    {
-        String result = "";
-        result += this.id + ",\"" + name + "\"," + coordinates.toCSV() + "," + creationDate + "," + oscarsCount + "," + goldenPalmCount + "," + genre + "," + mpaaRating + "," + screenwriter.toCSV();
-
-        return result;
-    }
-
-    /**
-     * Getters
-     */
-    public int getId()
-    {
-        return this.id;
-    }
     public String getName()
     {
         return this.name;
     }
-    public long getOscars()
+
+    public long getOscarsCount()
     {
         return this.oscarsCount;
     }
-    public Integer getGoldenPalms()
-    {
-        return this.goldenPalmCount;
-    }
+
     public MpaaRating getMpaaRating()
     {
         return this.mpaaRating;
     }
 
-    /**
-     * Setters
-     */
-    public void setName(String name)
+    public int getId()
     {
-        this.name = name;
-    }
-    public void setCoordinates(Coordinates coordinates)
-    {
-        this.coordinates = coordinates;
-    }
-    public void setOscars(long oscars)
-    {
-        this.oscarsCount = oscars;
-    }
-    public void setGoldenPalms(Integer goldenPalms)
-    {
-        this.goldenPalmCount = goldenPalms;
-    }
-    public void setGenre(MovieGenre genre)
-    {
-        this.genre = genre;
-    }
-    public void setMpaaRating(MpaaRating mpaaRating)
-    {
-        this.mpaaRating = mpaaRating;
-    }
-    public void setScreenwriter(Person screenwriter)
-    {
-        this.screenwriter = screenwriter;
-    }
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-    public void setID()
-    {
-        int result = 1;
-
-        if (!Movie.idList.isEmpty())
-        {
-            for (int i = 0; i < Movie.idList.size() + 1; i++) {
-                if (Movie.idList.contains(result))
-                    result += 1;
-                else {
-                    Movie.idList.add(result);
-                    this.id = result;
-                }
-            }
-        }
-        Movie.idList.add(result);
-        this.id = result;
+        return this.id;
     }
 
-    public static MovieGenre getGenre(String genre)
+    public String getUser()
     {
-        try
-        {
-            String category = genre.toUpperCase();
-            switch (category)
-            {
-                case "WESTERN":
-                    return MovieGenre.WESTERN;
-                case "COMEDY":
-                    return MovieGenre.COMEDY;
-                case "MUSICAL":
-                    return MovieGenre.MUSICAL;
-                case "ADVENTURE":
-                    return MovieGenre.ADVENTURE;
-                case "THRILLER":
-                    return MovieGenre.THRILLER;
-                default:
-                    break;
-            }
-            System.out.println("Incorrect format of CSV data in file.");
-            System.exit(1);
-        }
-        catch (NoSuchElementException noSuchElementException)
-        {
-            System.out.println("Program was stopped successfully. ");
-            System.exit(1);
-        }
-        return null;
-    }
-
-    public static MpaaRating getMpaaRating(String mpaaRating)
-    {
-        try
-        {
-            String category = mpaaRating.toUpperCase();
-            switch (category)
-            {
-                case "G":
-                    return MpaaRating.G;
-                case "PG":
-                    return MpaaRating.PG;
-                case "PG_13":
-                    return MpaaRating.PG_13;
-                case "R":
-                    return MpaaRating.R;
-                default:
-                    break;
-            }
-            System.out.println("Incorrect format of CSV data in file.");
-            System.exit(1);
-        }
-        catch (NoSuchElementException noSuchElementException)
-        {
-            System.out.println("Program was stopped successfully. ");
-            System.exit(1);
-        }
-        return null;
+        return this.user;
     }
 
     public int compareTo(Movie movie)
     {
-        if ((this.getGoldenPalms() + this.getOscars()) < (movie.getOscars() + movie.getGoldenPalms()))
+        if ((this.getGoldenPalmCount() + this.getOscarsCount()) < (movie.getOscarsCount() + movie.getGoldenPalmCount()))
             return -1;
         else
             return 1;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "id:" + id + ", name:" + name + ", coordinates:" + coordinates.toString() + ", date:" + creationDate +
+                ", Oscars:" + oscarsCount + ", Golden Palms:" + goldenPalmCount + ", genre:" + genre + ", MPAA rating:"
+                + mpaaRating + ", screenwriter:" + screenwriter.toString() + ", user:" + this.user;
     }
 }

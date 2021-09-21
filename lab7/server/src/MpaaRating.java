@@ -1,10 +1,5 @@
 import java.io.Serializable;
 
-/**
- * @author Denis Kirbaba
- * @version 1.0
- * Enum, containing MPAA ratings
- */
 public enum MpaaRating implements Serializable
 {
     G,
@@ -12,9 +7,6 @@ public enum MpaaRating implements Serializable
     PG_13,
     R;
 
-    /**
-     * Method to make MpaaRating object from String object
-     */
     public static MpaaRating stringToMpaaRating(String mpaaRating)
     {
             String category = mpaaRating.toUpperCase();
