@@ -84,6 +84,7 @@ public class ClientHandler
             {
                 Object command = ois.readObject();
                 String commandName = command.getClass().getName();
+                commandName = commandName.split("\\.")[1];
                 Manager manager = Manager.getInstance();
                 Database database = Database.getInstance();
                 switch (commandName.toLowerCase())
