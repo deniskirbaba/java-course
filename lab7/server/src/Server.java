@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Server
 {
@@ -9,6 +10,7 @@ public class Server
 
     public void start()
     {
+        ReentrantLock locker = new ReentrantLock();
         try
         {
             this.serverSocket = new ServerSocket(this.port);
@@ -18,7 +20,7 @@ public class Server
                 Socket client = serverSocket.accept();
                 System.out.println("Client connected.");
                 Runnable interactWithClient = () ->{
-                    ClientHandler clientHandler = new ClientHandler(client);
+                    ClientHandler clientHandler = new ClientHandler(client, locker);
                     clientHandler.start();
                 };
                 Thread thread = new Thread(interactWithClient);
