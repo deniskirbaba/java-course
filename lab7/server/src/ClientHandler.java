@@ -239,8 +239,5 @@ public class ClientHandler
         {
             System.out.println("Data transfer error.");
         }
-        finally {
-            this.locker.unlock();
-        }
     }
 }
