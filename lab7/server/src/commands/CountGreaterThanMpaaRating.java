@@ -4,6 +4,12 @@ import java.io.Serializable;
 import java.util.InputMismatchException;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.2
+ * Class representing the command for counting the number of elements whose MPAA rating is greater than the given one.
+ */
+
 public class CountGreaterThanMpaaRating implements Serializable
 {
     private int counter = 0;

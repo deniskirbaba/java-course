@@ -4,6 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.2
+ * Class representing the command output of all objects whose name begins with some substring.
+ */
+
 public class FilterStartsWithTheName implements Serializable
 {
     private String startingString;

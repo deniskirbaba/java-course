@@ -7,6 +7,12 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.8
+ * A class that represents a command to update an item by a given id.
+ */
+
 public class Update implements Serializable
 {
     private String id;

@@ -2,6 +2,12 @@ package data;
 
 import java.io.Serializable;
 
+/**
+ * @author Denis Kirbaba
+ * @version 1.3
+ * A class that represents a movie.
+ */
+
 public class Movie implements Serializable, Comparable<Movie>
 {
     private int id;

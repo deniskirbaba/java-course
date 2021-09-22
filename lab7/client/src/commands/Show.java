@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.3
+ * A class that represents the sorted output of all items in the collection.
+ */
+
 public class Show implements Serializable
 {
     private ArrayList<Movie> movies;

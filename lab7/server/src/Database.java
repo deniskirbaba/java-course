@@ -7,6 +7,16 @@ import java.util.stream.Collectors;
 import data.*;
 import commands.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.8
+ * The class associated with the database, storing the collection.
+ * Checks for jbdc driver existence.
+ * Performs database authorization (login, password, jdbcURL).
+ * Implemented singleton template, since the database should only exist in one instance.
+ * Execute commands to get, change, add and delete items from the database.
+ */
+
 public class Database
 {
     private String[] loginAndPassword;

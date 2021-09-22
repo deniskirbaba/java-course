@@ -6,6 +6,15 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import commands.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.5
+ * The class associated with the client over a socket.
+ * Performs client authorization (log in or sign up).
+ * Performs the receipt of commands, their processing and sending the results to the client.
+ * Supports ReentrantLock to control access to a share collection.
+ */
+
 public class ClientHandler
 {
     private Socket socket;

@@ -2,6 +2,12 @@ package commands;
 
 import java.io.Serializable;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.0
+ * Class representing the command to remove all objects of a given user from the collection.
+ */
+
 public class Clear implements Serializable
 {
     private String user;

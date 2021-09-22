@@ -6,6 +6,12 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.4
+ * A class that represents a command to remove all items greater than this one.
+ */
+
 public class RemoveGreater implements Serializable
 {
     private final Movie movie;

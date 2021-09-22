@@ -13,6 +13,13 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import commands.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.5
+ * The class responsible for connecting to the server, validating the entered commands,
+ * sending them to the server and displaying the results.
+ */
+
 public class Client
 {
     private String host = "localhost";

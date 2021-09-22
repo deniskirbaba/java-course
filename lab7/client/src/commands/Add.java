@@ -7,6 +7,14 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.3
+ * Class representing the command to add an object to the collection.
+ * Gets the arguments of the added object from the input stream from the client (both from the console and from a file).
+ * Stores the arguments of the added object to pass them to the server manager.
+ */
+
 public class Add implements Serializable
 {
     private String name;

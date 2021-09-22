@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.4
+ * Class representing a command to output all elements whose Oscars counter is greater than the given one.
+ */
+
 public class FilterLessThanOscarsCount implements Serializable
 {
     private long oscarsCount;

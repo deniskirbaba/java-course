@@ -2,6 +2,12 @@ package data;
 
 import java.io.Serializable;
 
+/**
+ * @author Denis Kirbaba
+ * @version 1.2
+ * An enum class that represents a MPAA rating of movie.
+ */
+
 public enum MpaaRating implements Serializable
 {
     G,

@@ -3,6 +3,12 @@ package commands;
 import java.io.Serializable;
 import java.util.InputMismatchException;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.2
+ * A class that represents a command to remove an element with the given id.
+ */
+
 public class RemoveById implements Serializable
 {
     private int id;

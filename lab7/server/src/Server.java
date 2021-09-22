@@ -3,6 +3,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.7
+ * The class that starts the server.
+ * Creates a daemon-thread for each new connection.
+ */
+
 public class Server
 {
     private int port = 7777;

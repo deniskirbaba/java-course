@@ -3,6 +3,13 @@ package commands;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.1
+ * Class representing the command displaying information about the collection:
+ * collection type, initialization date, number of objects.
+ */
+
 public class Info implements Serializable
 {
 

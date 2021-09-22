@@ -3,6 +3,12 @@ package commands;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Denis Kirbaba
+ * @version 1.7
+ * Class representing a command to display information about available commands.
+ */
+
 public class Help
 {
     private HashMap<String, String> manual = new HashMap<>();

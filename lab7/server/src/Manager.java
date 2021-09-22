@@ -6,6 +6,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import data.*;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.6
+ * The class that stores the collection in memory performs actions on it.
+ * Implemented singleton template, since the collection should only exist in one instance.
+ */
+
 public class Manager
 {
     private ArrayList<Movie> movies = new ArrayList<>();

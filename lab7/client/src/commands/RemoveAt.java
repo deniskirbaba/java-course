@@ -3,6 +3,12 @@ package commands;
 import java.io.Serializable;
 import java.util.InputMismatchException;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.1
+ * A class that represents a command to remove an element at a given position.
+ */
+
 public class RemoveAt implements Serializable
 {
     private int index;

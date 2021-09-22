@@ -2,6 +2,12 @@ package commands;
 
 import java.io.Serializable;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.1
+ * Class representing the command to check the object's id for existence (isExist) and for user belonging (isAvailable).
+ */
+
 public class CheckId implements Serializable
 {
     private long id;

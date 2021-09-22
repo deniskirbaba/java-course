@@ -2,6 +2,12 @@ package data;
 
 import java.io.Serializable;
 
+/**
+ * @author Denis Kirbaba
+ * @version 1.3
+ * An enum class that represents a genre of movie.
+ */
+
 public enum MovieGenre implements Serializable
 {
     WESTERN,

@@ -2,6 +2,12 @@ package data;
 
 import java.io.Serializable;
 
+/**
+ * @author Denis Kirbaba
+ * @version 1.1
+ * A class that represents a coordinate.
+ */
+
 public class Coordinates implements Serializable
 {
     private Long x;

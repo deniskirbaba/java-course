@@ -5,6 +5,15 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Locale;
 
+/**
+ * @author Denis Kirbaba
+ * @version 2.7
+ * Class representing execute script command.
+ * Execute commands from a given file.
+ * There is a check for readability of the file.
+ * There is a check for recursion in executable files.
+ */
+
 public class ExecuteScript implements Serializable
 {
     private String filePath;
