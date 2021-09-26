@@ -15,7 +15,7 @@ import data.*;
 
 public class Manager
 {
-    private ArrayList<Movie> movies = new ArrayList<>();
+    private volatile ArrayList<Movie> movies = new ArrayList<>();
     private LocalDateTime initializationDate = LocalDateTime.now();
     private String collectionClassType = "ArrayList";
     protected HashMap<String, String> manual = new HashMap<>();

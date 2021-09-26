@@ -1,25 +1,25 @@
-import java.io.Console;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import data.*;
 import commands.*;
 
 /**
  * @author Denis Kirbaba
- * @version 2.8
+ * @version 2.9
  * The class associated with the database, storing the collection.
  * Checks for jbdc driver existence.
- * Performs database authorization (login, password, jdbcURL).
+ * Performs database authorization (jdbcURL, login, password), where credentials are reading from db.cfg file.
  * Implemented singleton template, since the database should only exist in one instance.
  * Execute commands to get, change, add and delete items from the database.
  */
 
 public class Database
 {
-    private String[] loginAndPassword;
+    private Properties info;
     private String jdbcURL = "jdbc:postgresql://localhost:8000/studs";
     private static Database instance;
 
@@ -27,8 +27,17 @@ public class Database
     {
         if (checkDriver())
         {
-            this.loginAndPassword = getLoginAndPassword();
-            this.load(true);
+            this.info = new Properties();
+            try
+            {
+                this.info.load(new FileInputStream("db.cfg"));
+                this.load(true);
+            }
+            catch (IOException e)
+            {
+                System.out.println("FIle with credentials wasn't found.");
+                System.exit(1);
+            }
         }
         else
         {
@@ -57,60 +66,9 @@ public class Database
         return true;
     }
 
-    public static String[] getLoginAndPassword()
-    {
-        String[] data = {"", ""};
-        try
-        {
-            System.out.println("To access the database, you must enter your username and password.");
-            Scanner scanner = new Scanner(System.in);
-            while (true) {
-                System.out.print("Login: ");
-                String login = scanner.nextLine().trim();
-                if (!login.equals(""))
-                {
-                    data[0] = login;
-                    break;
-                }
-            }
-
-            Console console = System.console();
-            if (console != null)
-            {
-                while (true) {
-                    System.out.print("Password: ");
-                    char[] symbols = console.readPassword();
-                    if (symbols != null) {
-                        data[1] = String.valueOf(symbols);
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                while (true)
-                {
-                    System.out.print("Password: ");
-                    String password = scanner.nextLine().trim();
-                    if (!password.equals("")) {
-                        data[1] = password;
-                        break;
-                    }
-                }
-            }
-            return data;
-        }
-        catch (NoSuchElementException noSuchElementException)
-        {
-            System.out.println("Program was stopped successfully.");
-            System.exit(0);
-            return data;
-        }
-    }
-
     public void connect()
     {
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]))
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info))
         {
             System.out.println("Database connection established.");
         }
@@ -123,7 +81,7 @@ public class Database
     public void load(boolean exitFlag)
     {
         String sqlCommand = "SELECT * FROM movies";
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              Statement loadCollection = connection.createStatement();
              ResultSet res = loadCollection.executeQuery(sqlCommand))
         {
@@ -164,7 +122,7 @@ public class Database
         String sqlCommand = "INSERT INTO movies (name, coordinate_x, coordinate_y, creation_date, oscars_count," +
                 "golden_palm_count, genre, mpaa_rating, screenwriter_name, screenwriter_height, screenwriter_weight," +
                 "login) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              PreparedStatement statement = connection.prepareStatement(sqlCommand))
         {
             statement.setString(1, add.getName());
@@ -191,7 +149,7 @@ public class Database
 
     public int checkUser(String login)
     {
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              PreparedStatement check = connection.prepareStatement("SELECT 1 FROM users WHERE login = ?"))
         {
             check.setString(1, login);
@@ -209,7 +167,7 @@ public class Database
 
     public int checkUser(String login, String password)
     {
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              PreparedStatement check = connection.prepareStatement("SELECT 1 FROM users WHERE login = ? and password = ?"))
         {
             check.setString(1, login);
@@ -228,7 +186,7 @@ public class Database
 
     public boolean addUser(String login, String password)
     {
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              PreparedStatement addUser = connection.prepareStatement("INSERT INTO users (login, password) " +
                      "values (?, ?)"))
         {
@@ -249,7 +207,7 @@ public class Database
         String sqlCommand = "UPDATE movies SET name = ?, coordinate_x = ?, coordinate_y = ?, oscars_count = ?," +
                 "golden_palm_count = ?, genre = ?, mpaa_rating = ?, screenwriter_name = ?, screenwriter_height = ?, screenwriter_weight = ?" +
                 " WHERE id = " + update.getId();
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              PreparedStatement statement = connection.prepareStatement(sqlCommand))
         {
             statement.setString(1, update.getName());
@@ -275,7 +233,7 @@ public class Database
     public boolean removeById(int id)
     {
         String sqlCommand = "DELETE FROM movies WHERE id = " + id;
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              PreparedStatement statement = connection.prepareStatement(sqlCommand))
         {
             statement.executeUpdate();
@@ -291,7 +249,7 @@ public class Database
     public boolean clear(String user)
     {
         String sqlCommand = "DELETE FROM movies WHERE login = ?";
-        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.loginAndPassword[0], this.loginAndPassword[1]);
+        try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
              PreparedStatement statement = connection.prepareStatement(sqlCommand))
         {
             statement.setString(1, user);
