@@ -1,0 +1,37 @@
+/execute_script C:\denFiles\progs\java\data\add3.txt
+
+add
+Pulp Fiction
+49
+3
+9
+17
+COMEDY
+R
+Quentin Tarantino
+188
+84
+
+add
+The Hateful Eight
+143
+97
+6
+13
+WESTERN
+R
+Quentin Tarantino
+188
+84
+
+add
+Once Upon a Time... In Hollywood
+77
+63
+5
+9
+COMEDY
+R
+Quentin Tarantino
+188
+84

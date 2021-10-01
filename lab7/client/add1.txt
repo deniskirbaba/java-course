@@ -1,0 +1,97 @@
+/execute_script C:\denFiles\progs\java\data\add1.txt
+
+add
+Green Mile
+1
+12
+3
+4
+THRILLER
+R
+Frank Darabont
+186
+73
+
+add
+Shawshank Redemption
+77
+8
+5
+9
+ADVENTURE
+R
+Frank Darabont
+186
+73
+
+add
+The Lord of the Rings: The Return of the King
+99
+102
+8
+5
+ADVENTURE
+PG_13
+Peter Jackson
+177
+83
+
+add
+The Lord of the Rings: The Two Towers
+11
+28
+5
+11
+ADVENTURE
+PG_13
+Peter Jackson
+177
+83
+
+add
+The Lord of the Rings: The Fellowship of the Ring
+72
+127
+3
+4
+ADVENTURE
+PG_13
+Peter Jackson
+177
+83
+
+add
+Forrest Gump
+2
+200
+7
+4
+COMEDY
+PG_13
+Robert Zemekis
+177
+65
+
+add
+Interstellar
+22
+45
+4
+5
+ADVENTURE
+PG_13
+Christopher Nolan
+187
+83
+
+add
+The Lion King
+75
+121
+4
+8
+ADVENTURE
+G
+Rodger Allers
+174
+73

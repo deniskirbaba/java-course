@@ -9,7 +9,7 @@ import java.util.Locale;
 
 /**
  * @author Denis Kirbaba
- * @version 2.7
+ * @version 2.8
  * Class representing execute script command.
  * Execute commands from a given file.
  * There is a check for readability of the file.
@@ -139,7 +139,7 @@ public class ExecuteScript implements Serializable
                                     System.out.println((String) ois.readObject());
                                 }
                                 else
-                                    System.out.println("Invalid arguments in command add.");
+                                    System.out.println("Invalid arguments in add command.");
                                 break;
                             case "show":
                                 Show show = new Show();
@@ -192,14 +192,19 @@ public class ExecuteScript implements Serializable
                                 {
                                     if (this.checkId(commandArguments[1], oos, ois))
                                     {
-                                        String[] uargs = new String[numberOfFields];
+                                        String[] updateArgs = new String[numberOfFields];
                                         for (int j = 0; j < numberOfFields; j++)
-                                            uargs[j] = contents.get(i + j + 1).trim();
+                                            updateArgs[j] = contents.get(i + j + 1).trim();
                                         i += numberOfFields;
-                                        Update update = new Update(uargs);
-                                        update.setID(commandArguments[1]);
-                                        oos.writeObject(update);
-                                        System.out.println((String)ois.readObject());
+                                        if (Movie.checkArguments(updateArgs))
+                                        {
+                                            Update update = new Update(updateArgs);
+                                            update.setID(commandArguments[1]);
+                                            oos.writeObject(update);
+                                            System.out.println((String)ois.readObject());
+                                        }
+                                        else
+                                            System.out.println("Invalid arguments in update command.");
                                     }
                                 } else
                                     System.out.println("This function requires the parameter.");
@@ -247,14 +252,19 @@ public class ExecuteScript implements Serializable
                                 removeFirst.printResult();
                                 break;
                             case "remove_greater":
-                                String[] rargs = new String[numberOfFields];
+                                String[] removeGreaterArgs = new String[numberOfFields];
                                 for (int j = 0; j < numberOfFields; j++)
-                                    rargs[j] = contents.get(i + j + 1).trim();
+                                    removeGreaterArgs[j] = contents.get(i + j + 1).trim();
                                 i += numberOfFields;
-                                RemoveGreater removeGreater = new RemoveGreater(this.login, rargs);
-                                oos.writeObject(removeGreater);
-                                removeGreater = (RemoveGreater) ois.readObject();
-                                removeGreater.printResult();
+                                if (Movie.checkArguments(removeGreaterArgs))
+                                {
+                                    RemoveGreater removeGreater = new RemoveGreater(this.login, removeGreaterArgs);
+                                    oos.writeObject(removeGreater);
+                                    removeGreater = (RemoveGreater) ois.readObject();
+                                    removeGreater.printResult();
+                                }
+                                else
+                                    System.out.println("Invalid arguments in remove_greater command.");
                                 break;
                             case "execute_script":
                                 if (commandArguments.length != 1)

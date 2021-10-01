@@ -1,0 +1,37 @@
+/execute_script C:\denFiles\progs\java\data\add2.txt
+
+add
+Ivan Vasilievich: Back to the Future
+23
+31
+2
+3
+COMEDY
+PG
+Leonid Gaidai
+179
+78
+
+add
+The Godfather
+17
+68
+8
+14
+THRILLER
+R
+Mario Puzo
+192
+108
+
+add
+The Dark Knight
+73
+81
+4
+5
+THRILLER
+PG_13
+Christopher Nolan
+188
+94

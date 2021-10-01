@@ -1,5 +1,0 @@
-execute_script C:\denFiles\progs\java\data\commands.txt
-
-show
-
-execute_script C:\denFiles\progs\java\data\add.txt
