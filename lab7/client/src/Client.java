@@ -11,6 +11,9 @@ import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import commands.*;
 
 /**
@@ -23,7 +26,7 @@ import commands.*;
 public class Client
 {
     private String host = "localhost";
-    private int port = 7777;
+    private int port = 7456;
     private Socket socket;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
@@ -261,16 +264,22 @@ public class Client
     public String getLogin()
     {
         String login = "";
+        Pattern pattern = Pattern.compile("^[A-Za-z]([A-Za-z0-9-_]*)");
         try
         {
             Scanner scanner = new Scanner(System.in);
             while (true)
             {
                 System.out.print("Login: ");
-                login = scanner.nextLine().trim();
+                login = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
                 if (!login.equals(""))
                 {
-                    break;
+                    Matcher matcher = pattern.matcher(login);
+                    if (matcher.matches() && login.length() > 2)
+                        break;
+                    else
+                        System.out.println("Login may contain only letters of the Latin alphabet (case-insensitive), " +
+                            "numbers and underscores or dashes and start with a letter. The minimum login length is 3 characters.");
                 }
             }
         }
@@ -286,6 +295,7 @@ public class Client
     {
         Scanner scanner = new Scanner(System.in);
         String password = "";
+        Pattern pattern = Pattern.compile("^[A-Za-z]([A-Za-z0-9-_]*)");
         try
         {
             Console console = System.console();
@@ -295,9 +305,15 @@ public class Client
                 {
                     System.out.print("Password: ");
                     char[] symbols = console.readPassword();
-                    if (symbols != null) {
-                        password = String.valueOf(symbols);
-                        break;
+                    if (symbols != null)
+                    {
+                        password = String.valueOf(symbols).toLowerCase(Locale.ROOT);
+                        Matcher matcher = pattern.matcher(password);
+                        if (matcher.matches() && password.length() > 4)
+                            break;
+                        else
+                            System.out.println("Password may contain only letters of the Latin alphabet (case-insensitive), " +
+                                    "numbers and underscores or dashes and start with a letter. The minimum login length is 5 characters.");
                     }
                 }
             }
@@ -306,9 +322,15 @@ public class Client
                 while (true)
                 {
                     System.out.print("Password: ");
-                    password = scanner.nextLine().trim();
-                    if (!password.equals("")) {
-                        break;
+                    password = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
+                    if (!password.equals(""))
+                    {
+                        Matcher matcher = pattern.matcher(password);
+                        if (matcher.matches() && password.length() > 4)
+                            break;
+                        else
+                            System.out.println("Password may contain only letters of the Latin alphabet (case-insensitive), " +
+                                    "numbers and underscores or dashes and start with a letter. The minimum login length is 5 characters.");
                     }
                 }
             }

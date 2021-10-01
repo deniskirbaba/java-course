@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Server
 {
-    private int port = 7777;
+    private int port = 7456;
     private ServerSocket serverSocket;
 
     public void start()

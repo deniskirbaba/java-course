@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author Denis Kirbaba
- * @version 1.3
+ * @version 1.4
  * A class that represents a movie.
  */
 
@@ -80,5 +80,55 @@ public class Movie implements Serializable, Comparable<Movie>
         return "id:" + id + ", name:" + name + ", coordinates:" + coordinates.toString() + ", date:" + creationDate +
                 ", Oscars:" + oscarsCount + ", Golden Palms:" + goldenPalmCount + ", genre:" + genre + ", MPAA rating:"
                 + mpaaRating + ", screenwriter:" + screenwriter.toString() + ", user:" + this.user;
+    }
+
+    public static boolean checkArguments(String[] args)
+    {
+        try
+        {
+            if (args[0].equals(""))
+                return false;
+
+            long x = Long.parseLong(args[1]);
+            if (x > 414 || x < 0)
+                return false;
+
+            long y = Long.parseLong(args[2]);
+            if (y > 211 || y < 0)
+                return false;
+
+            long oscarsCount = Long.parseLong(args[3]);
+            if (oscarsCount < 1)
+                return false;
+
+            int goldenPalmCount = Integer.parseInt(args[4]);
+            if (goldenPalmCount < 1)
+                return false;
+
+            String genre = args[5];
+            if (MovieGenre.stringToGenre(genre) == null)
+                return false;
+
+            String mpaaRating = args[6];
+            if (MpaaRating.stringToMpaaRating(mpaaRating) == null)
+                return false;
+
+            if (args[7].equals(""))
+                return false;
+
+            int height = Integer.parseInt(args[8]);
+            if (height <= 0)
+                return false;
+
+            float weight = Float.parseFloat(args[9]);
+            if (weight <= 0)
+                return false;
+
+            return true;
+        }
+        catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException e)
+        {
+            return false;
+        }
     }
 }

@@ -123,11 +123,6 @@ public class Add implements Serializable
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("Enter number of golden palms: ");
                 Integer goldenpalms = scanner.nextInt();
-                if (goldenpalms.equals(""))
-                {
-                    System.out.println("This value cannot be empty.");
-                    continue;
-                }
                 if (goldenpalms < 1)
                 {
                     System.out.println("Value should be > 0.");
@@ -312,11 +307,6 @@ public class Add implements Serializable
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("Enter X coordinate (max value is 414): ");
                 Long x = scanner.nextLong();
-                if (x.equals(""))
-                {
-                    System.out.println("This value cannot be empty.");
-                    continue;
-                }
                 if (x > 414){
                     System.out.println("Max value is 414.");
                     continue;

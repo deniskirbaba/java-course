@@ -1,5 +1,7 @@
 package commands;
 
+import data.Movie;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -130,9 +132,14 @@ public class ExecuteScript implements Serializable
                                 for (int j = 0; j < numberOfFields; j++)
                                     args[j] = contents.get(i + j + 1).trim();
                                 i += numberOfFields;
-                                Add add = new Add(this.login, args);
-                                oos.writeObject(add);
-                                System.out.println((String)ois.readObject());
+                                if (Movie.checkArguments(args))
+                                {
+                                    Add add = new Add(this.login, args);
+                                    oos.writeObject(add);
+                                    System.out.println((String) ois.readObject());
+                                }
+                                else
+                                    System.out.println("Invalid arguments in command add.");
                                 break;
                             case "show":
                                 Show show = new Show();
