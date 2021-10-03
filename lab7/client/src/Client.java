@@ -26,7 +26,7 @@ import commands.*;
 public class Client
 {
     private String host = "localhost";
-    private int port = 7456;
+    private int port = 7457;
     private Socket socket;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;

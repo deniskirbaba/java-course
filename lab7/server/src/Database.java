@@ -20,7 +20,7 @@ import commands.*;
 public class Database
 {
     private Properties info;
-    private String jdbcURL = "jdbc:postgresql://localhost:8000/studs";
+    private String jdbcURL = "jdbc:postgresql://pg:5432/studs";
     private static Database instance;
 
     public Database()
@@ -82,36 +82,48 @@ public class Database
     {
         String sqlCommand = "SELECT * FROM movies";
         try (Connection connection = DriverManager.getConnection(this.jdbcURL, this.info);
-             Statement loadCollection = connection.createStatement();
+             Statement loadCollection = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
              ResultSet res = loadCollection.executeQuery(sqlCommand))
         {
             Manager manager = Manager.getInstance();
             manager.clear();
             while (res.next())
             {
-                int id = res.getInt("id");
-                String name = res.getString("name");
-                Long coordinateX = res.getLong("coordinate_x");
-                long coordinateY = res.getLong("coordinate_y");
-                String date = res.getString("creation_date");
-                long oscarsCount = res.getLong("oscars_count");
-                Integer goldenPalmCount = res.getInt("golden_palm_count");
-                MovieGenre genre = MovieGenre.stringToGenre(res.getString("genre"));
-                MpaaRating mpaaRating = MpaaRating.stringToMpaaRating(res.getString("mpaa_rating"));
-                String screenwriterName = res.getString("screenwriter_name");
-                int screenwriterHeight = res.getInt("screenwriter_height");
-                float screenwriterWeight = res.getFloat("screenwriter_weight");
-                String user = res.getString("login");
+                    String id = res.getString("id");
+                    String name = res.getString("name");
+                    String coordinateX = res.getString("coordinate_x");
+                    String coordinateY = res.getString("coordinate_y");
+                    String date = res.getString("creation_date");
+                    String oscarsCount = res.getString("oscars_count");
+                    String  goldenPalmCount = res.getString("golden_palm_count");
+                    String genre = res.getString("genre");
+                    String mpaaRating = res.getString("mpaa_rating");
+                    String screenwriterName = res.getString("screenwriter_name");
+                    String screenwriterHeight = res.getString("screenwriter_height");
+                    String screenwriterWeight = res.getString("screenwriter_weight");
+                    String user = res.getString("login");
 
-                Movie movie = new Movie(id, name, new Coordinates(coordinateX, coordinateY), date, oscarsCount,goldenPalmCount,
-                        genre, mpaaRating, new Person(screenwriterName, screenwriterHeight, screenwriterWeight), user);
-                manager.add(movie);
+                    if (Movie.checkArguments(id, name, coordinateX, coordinateY, date, oscarsCount, goldenPalmCount,
+                            genre, mpaaRating, screenwriterName, screenwriterHeight, screenwriterWeight, user))
+                    {
+                        Movie movie = new Movie(Integer.parseInt(id), name, new Coordinates(Long.parseLong(coordinateX),
+                                Long.parseLong(coordinateY)), date, Long.parseLong(oscarsCount), Integer.parseInt(goldenPalmCount),
+                                MovieGenre.stringToGenre(genre), MpaaRating.stringToMpaaRating(mpaaRating),
+                                new Person(screenwriterName, Integer.parseInt(screenwriterHeight), Float.parseFloat(screenwriterWeight)),
+                                user);
+                        manager.add(movie);
+                    }
+                    else
+                    {
+                        this.removeById(Integer.parseInt(id));
+                        System.out.println("Removed one invalid row from database.");
+                    }
             }
             System.out.println("Collection successfully loaded from database.");
         }
         catch (SQLException e)
         {
-            System.out.println("Failed to connect to database.");
+            System.out.println("Failed to connect to database." + e.getMessage());
             if (exitFlag)
                 System.exit(1);
         }

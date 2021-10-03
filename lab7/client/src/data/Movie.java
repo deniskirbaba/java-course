@@ -1,10 +1,12 @@
 package data;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Denis Kirbaba
- * @version 1.4
+ * @version 1.6
  * A class that represents a movie.
  */
 
@@ -123,6 +125,83 @@ public class Movie implements Serializable, Comparable<Movie>
             float weight = Float.parseFloat(args[9]);
             if (weight <= 0)
                 return false;
+
+            return true;
+        }
+        catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException e)
+        {
+            return false;
+        }
+    }
+
+    public static boolean checkArguments(String sid, String name, String scoordinateX, String scoordinateY, String creationDate,
+                                         String soscarsCount, String sgoldenPalmCount, String genre, String mpaaRating,
+                                         String screenwriterName, String sscreenwriterHeight, String sscreenwriterWeight,
+                                         String user)
+    {
+        try
+        {
+            int id = Integer.parseInt(sid);
+            if (id < 1)
+                return false;
+
+            if (name.equals(""))
+                return false;
+
+            long coordinateX = Long.parseLong(scoordinateX);
+            if (coordinateX > 414 || coordinateX < 1)
+                return false;
+
+            long coordinateY = Long.parseLong(scoordinateY);
+            if (coordinateY > 211 || coordinateY < 1)
+                return false;
+
+            String[] time = creationDate.trim().split("\\s+");
+            String hourMinute = time[0];
+            String dayMonthYear = time[1];
+            int hour = Integer.parseInt(hourMinute.split(":")[0]);
+            int minute = Integer.parseInt(hourMinute.split(":")[1]);
+            int day = Integer.parseInt(dayMonthYear.split("\\.")[0]);
+            int month = Integer.parseInt(dayMonthYear.split("\\.")[1]);
+            int year = Integer.parseInt(dayMonthYear.split("\\.")[2]);
+            if (!(hour > -1 && hour < 24 && minute > -1 && minute < 60 && day > 0 && day < 32 && month > 0
+                    && month < 13 && year > -1 && year < 2022))
+                return false;
+
+            long oscarsCount = Long.parseLong(soscarsCount);
+            if (oscarsCount < 1)
+                return false;
+
+            int goldenPalmCount = Integer.parseInt(sgoldenPalmCount);
+            if (goldenPalmCount < 1)
+                return false;
+
+            if (genre.equals("") || MovieGenre.stringToGenre(genre) == null)
+                return false;
+
+            if (mpaaRating.equals("") || MpaaRating.stringToMpaaRating(mpaaRating) == null)
+                return false;
+
+            if (screenwriterName.equals(""))
+                return false;
+
+            int screenwriterHeight = Integer.parseInt(sscreenwriterHeight);
+            if (screenwriterHeight < 1)
+                return false;
+
+            float screenwriterWeight = Float.parseFloat(sscreenwriterWeight);
+            if (screenwriterWeight <= 0)
+                return false;
+
+            Pattern pattern = Pattern.compile("^[A-Za-z]([A-Za-z0-9-_]*)");
+            if (user.equals(""))
+                return false;
+            else
+            {
+                Matcher matcher = pattern.matcher(user);
+                if (!(matcher.matches() && user.length() > 2))
+                    return false;
+            }
 
             return true;
         }
